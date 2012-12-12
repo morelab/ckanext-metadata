@@ -26,6 +26,6 @@ setup(
 	"""
         [ckan.plugins]
 	# Add plugins here, eg
-	metadata=ckanext.linkeddata:MetadataExtension
+	metadata=ckanext.linkeddata.plugin:MetadataExtension
 	""",
 )
