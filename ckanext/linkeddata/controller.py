@@ -2,6 +2,9 @@ from ckan.lib.base import render, c
 from logging import getLogger
 from ckan.controllers.package import PackageController
 
+import uuid
+from ckan.lib.celery_app import celery
+
 log = getLogger(__name__)
 
 class MetadataController(PackageController):
@@ -13,6 +16,9 @@ class MetadataController(PackageController):
 		template = self.read(id)
 		
 		c.extra_metadata = {'keyA': 'valueA', 'keyB': 'valueB'}
+		
+		log.info('Executing task using celery')
+		celery.send_task("linkeddata.echofunction", args=["Hello World"], task_id=str(uuid.uuid4()))
 		
 		#rendering using default template
 		return render('metadata/read.html')		

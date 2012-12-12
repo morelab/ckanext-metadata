@@ -24,8 +24,11 @@ setup(
 	],
 	entry_points=\
 	"""
-        [ckan.plugins]
-	# Add plugins here, eg
-	metadata=ckanext.linkeddata.plugin:MetadataExtension
+    [ckan.plugins]
+		# Add plugins here, eg
+		metadata=ckanext.linkeddata.plugin:MetadataExtension
+		
+	[ckan.celery_task]
+		tasks = ckanext.linkeddata.celery_import:task_imports
 	""",
 )
