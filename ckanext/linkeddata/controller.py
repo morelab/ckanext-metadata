@@ -1,4 +1,4 @@
-from ckan.lib.base import render
+from ckan.lib.base import render, c
 from logging import getLogger
 from ckan.controllers.package import PackageController
 
@@ -11,6 +11,8 @@ class MetadataController(PackageController):
 		
 		# using default functionality
 		template = self.read(id)
+		
+		c.extra_metadata = {'keyA': 'valueA', 'keyB': 'valueB'}
 		
 		#rendering using default template
 		return render('metadata/read.html')		
