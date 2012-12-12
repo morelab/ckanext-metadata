@@ -32,11 +32,12 @@ class MetadataExtension(SingletonPlugin):
     def filter(self, stream):
         routes = request.environ.get('pylons.routes_dict')
         log.info(routes)
-        if routes.get('controller') in ('package', 'related') :
+        if routes.get('controller') in ('package', 'related',
+			'ckanext.linkeddata.controller:MetadataController') :
                stream = stream | Transformer('//ul[@class="nav nav-pills"]').append(HTML(
                     
                     '''<li class>
-                        <a class href="/metadata/%s">
+                        <a class href="/dataset/metadata/%s">
                             <img src="/icons/rdf_flyer.24" height="16px" width="16px" alt="None" class="inline-icon ">
                             Extra
                         </a>
@@ -47,7 +48,7 @@ class MetadataExtension(SingletonPlugin):
         return stream
        
     def before_map(self, map):
-		map.connect('/metadata/{id}', controller='ckanext.linkeddata.controller:MetadataController', action='show_metadata')
+		map.connect('/dataset/metadata/{id}', controller='ckanext.linkeddata.controller:MetadataController', action='show_metadata')
 		
 		return map
     
