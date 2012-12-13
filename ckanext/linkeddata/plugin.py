@@ -44,11 +44,24 @@ class MetadataExtension(SingletonPlugin):
                     </li>''' % routes.get('id')
                     
                 ))
+                
+        if routes.get('controller') in ('admin', 'ckanext.linkeddata.controller:AdminController'):
+			 stream = stream | Transformer('//ul[@class="nav nav-pills"]').append(HTML(
+                    
+                    '''<li class>
+                        <a class href="/ckan-admin/metadata-tasks">
+                            <img src="/icons/rdf_flyer.24" height="16px" width="16px" alt="None" class="inline-icon ">
+                            Metadata Tasks Status
+                        </a>
+                    </li>'''
+                    
+                ))
 
         return stream
        
     def before_map(self, map):
-		map.connect('/dataset/metadata/{id}', controller='ckanext.linkeddata.controller:MetadataController', action='show_metadata')
-		
-		return map
+        map.connect('/dataset/metadata/{id}', controller='ckanext.linkeddata.controller:MetadataController', action='show_metadata')
+        map.connect('/ckan-admin/metadata-tasks', controller='ckanext.linkeddata.controller:AdminController', action='metadata_tasks')
+
+        return map
     
