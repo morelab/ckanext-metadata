@@ -28,7 +28,7 @@ class MetadataController(PackageController):
 
         task_status = getTaskStatus(context, package_info['id'])
 
-        c.metadata_task_status = task_status[0]
+        c.metadata_task_status = task_status[1]
 
         c.extra_metadata = {}
 
@@ -48,7 +48,7 @@ class AdminController(BaseController):
             package_info = get_action('package_show')(context, {'id': package})
 
             task_status = getTaskStatus(context, package_info['id'])
-            if task_status[0] == 'disabled':
+            if task_status[1] == 'disabled':
                 #launch task and change status to waiting
 
                 task_id = make_uuid()
@@ -56,8 +56,8 @@ class AdminController(BaseController):
                     'entity_id': package_info['id'],
                     'entity_type': u'package',
                     'task_type': u'metadata',
-                    'key': u'celery_task_id',
-                    'value': task_id,
+                    'key': u'celery_task_status',
+                    'value': (task_id, 'waiting', None),
                     'error': u'',
                     'last_updated': datetime.now().isoformat()
                 }
