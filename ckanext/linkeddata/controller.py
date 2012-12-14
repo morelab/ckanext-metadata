@@ -51,7 +51,6 @@ class AdminController(BaseController):
             if task_status[1] == 'disabled':
                 #launch task and change status to waiting
 
-                task_id = make_uuid()
                 task_status = {
                     'entity_id': package_info['id'],
                     'entity_type': u'package',
@@ -66,7 +65,7 @@ class AdminController(BaseController):
                 task_status = get_action('task_status_update')(context, task_status)
 
                 task_context = {'task_id': task_status['id'], 'site_url': config.get('ckan.site_url'), 'apikey': 'b1d895d3-5187-491c-8826-4c7f63fe84ab'}
-                celery.send_task("linkeddata.update_metadata", args=[task_context, package_info['id']], task_id=task_id)
+                celery.send_task("linkeddata.update_metadata", args=[task_context, package_info['id']], task_id=task_status['id'])
                 log.info('Task sent to celery for package %s' % package_info['id'])
 
         return render('tasks/index.html')
