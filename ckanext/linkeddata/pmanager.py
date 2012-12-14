@@ -82,8 +82,8 @@ def getTaskStatusValue(context, id):
     if task_status[0] is None:
         return 'disabled'
     elif task_status[1] is None:
-        return 'waiting'
-    elif task_status[1] is 'Error':
+        return 'launched'
+    elif task_status[1] is 'error':
         return 'error'
     else:
         return 'finished'
