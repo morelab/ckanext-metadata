@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*- 
+
 from ckan.plugins import SingletonPlugin, IGenshiStreamFilter, implements, IConfigurer, IRoutes
 from logging import getLogger
 from pylons import request

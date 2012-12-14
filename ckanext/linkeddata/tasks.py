@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*- 
+
 from ckan.lib.celery_app import celery
 from logging import getLogger
 
