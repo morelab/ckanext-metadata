@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*- 
 
-from ckan.lib.base import render, c, model
+from ckan.lib.base import render, c, model, config
 from logging import getLogger
 from ckan.controllers.package import PackageController
 from ckan.lib.base import BaseController
@@ -57,13 +57,16 @@ class AdminController(BaseController):
                     'entity_type': u'package',
                     'task_type': u'metadata',
                     'key': u'celery_task_status',
-                    'value': (task_id, 'waiting', None),
+                    'value': str((task_id, 'waiting', None)),
                     'error': u'',
                     'last_updated': datetime.now().isoformat()
                 }
 
-                get_action('task_status_update')(context, task_status)
-                celery.send_task("linkeddata.update_metadata", args=[package_info['id']], task_id=task_id)
+                #TODO: remove fixed user key
+                task_status = get_action('task_status_update')(context, task_status)
+
+                task_context = {'task_id': task_status['id'], 'site_url': config.get('ckan.site_url'), 'apikey': 'b1d895d3-5187-491c-8826-4c7f63fe84ab'}
+                celery.send_task("linkeddata.update_metadata", args=[task_context, package_info['id']], task_id=task_id)
                 log.info('Task sent to celery for package %s' % package_info['id'])
 
         return render('tasks/index.html')
