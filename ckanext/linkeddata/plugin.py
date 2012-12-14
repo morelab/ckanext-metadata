@@ -1,4 +1,4 @@
-from ckan.plugins import SingletonPlugin, IGenshiStreamFilter, implements, IConfigurer, IRoutes, IMapper
+from ckan.plugins import SingletonPlugin, IGenshiStreamFilter, implements, IConfigurer, IRoutes
 from logging import getLogger
 from pylons import request
 from genshi.input import HTML
@@ -12,7 +12,6 @@ class MetadataExtension(SingletonPlugin):
     implements(IConfigurer, inherit=True)
     implements(IGenshiStreamFilter, inherit=True)
     implements(IRoutes, inherit=True)
-    implements(IMapper, inherit=True)
     
     def update_config(self, config):
         here = os.path.dirname(__file__)
@@ -65,6 +64,4 @@ class MetadataExtension(SingletonPlugin):
         map.connect('/ckan-admin/metadata-tasks', controller='ckanext.linkeddata.controller:AdminController', action='metadata_tasks')
 
         return map
-    
-    def after_update(self, mapper, connection, instance):
-        log.info("Updated: %r", instance)
+        

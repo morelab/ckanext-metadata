@@ -1,22 +1,26 @@
 # -*- coding: utf8 -*- 
 
+import uuid
+from ckan.logic import get_action
+
 def getExtraProperty(package_info, key):
         for extra_entry in package_info['extras']:
             if extra_entry['key'] == key:
-                return extra_entry['value']
+                return extra_entry['value'][1:-1]
         return None
 
-def createExtraProperty(package_id, key, value):
-    adapta_metadata = {}
-    adapta_metadata['state'] = 'deleted'
-    adapta_metadata['value'] = '"' + str(value) + '"'
-    adapta_metadata['revision_timestamp'] = '2012-12-13T14:27:35.654886'
-    adapta_metadata['package_id'] = package_id
-    adapta_metadata['key'] = key
-    adapta_metadata['revision_id'] = str(uuid.uuid4())
-    adapta_metadata['id'] = str(uuid.uuid4())
-    return adapta_metadata
+def createExtraProperty(package_info, key, value):
+    extra_property = {}
+    extra_property['state'] = 'active'
+    extra_property['value'] = '"' + str(value) + '"'
+    extra_property['revision_timestamp'] = '2012-12-13T14:27:35.654886'
+    extra_property['package_id'] = package_info['id']
+    extra_property['key'] = key
+    extra_property['revision_id'] = str(uuid.uuid4())
+    extra_property['id'] = str(uuid.uuid4())
 
+    package_info['extras'].append(extra_property)
+    
 def checkExtraProperty(package_info, key):
     for extra_data in package_info['extras']:
         if extra_data['key'] == key:
@@ -24,16 +28,15 @@ def checkExtraProperty(package_info, key):
 
     return False
 
-def updateExtraProperty(package_info, extra_property):
+def updateExtraProperty(package_info, key, value):
     for extra_data in package_info['extras']:
-        if extra_data['key'] == extra_property['key']:
-            extra_data['value'] = extra_property['value']
+        if extra_data['key'] == key:
+            extra_data['value'] = '"' + str(value) + '"'
             extra_data['revision_id'] = str(uuid.uuid4())
             extra_data['revision_timestamp'] = '2012-12-13T14:27:35.654886'
             return 
 
     package_info['extras'].append(extra_property)
-    print package_info['extras']
 
 def deleteExtraProperty(package_info, key):
     for extra_data in package_info['extras']:
@@ -63,4 +66,3 @@ def updatePackage(context, package_info):
     updated_info['notes'] = package_info['notes']
 
     updated_package = get_action('package_update')(context, updated_info)
-    print 'Updated package %s' % updated_package
