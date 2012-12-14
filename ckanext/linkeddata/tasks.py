@@ -45,7 +45,7 @@ def update_metadata(context, id):
         'entity_type': u'package',
         'task_type': u'metadata',
         'key': u'celery_task_status',
-        'value': str((None, 'updated', "Hello world")),
+        'value': str(id, "Hello world")),
         'error': u'',
         'last_updated': datetime.now().isoformat()       
     }

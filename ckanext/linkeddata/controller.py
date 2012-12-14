@@ -5,7 +5,7 @@ from logging import getLogger
 from ckan.controllers.package import PackageController
 from ckan.lib.base import BaseController
 from ckan.logic import get_action, NotFound
-from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, getTaskStatus
+from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, getTaskStatusValue
 
 from ckan.model.types import make_uuid
 from ckan.lib.celery_app import celery
@@ -26,9 +26,7 @@ class MetadataController(PackageController):
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author}
         package_info = get_action('package_show')(context, {'id': c.pkg.id})
 
-        task_status = getTaskStatus(context, package_info['id'])
-
-        c.metadata_task_status = task_status[1]
+        c.metadata_task_status = getTaskStatusValue(context, package_info['id'])
 
         c.extra_metadata = {}
 
@@ -47,8 +45,8 @@ class AdminController(BaseController):
             print 'Checking package %s status' % package
             package_info = get_action('package_show')(context, {'id': package})
 
-            task_status = getTaskStatus(context, package_info['id'])
-            if task_status[1] == 'disabled':
+            task_status = getTaskStatusValue(context, package_info['id'])
+            if task_status == 'disabled':
                 #launch task and change status to waiting
 
                 task_status = {
@@ -56,7 +54,7 @@ class AdminController(BaseController):
                     'entity_type': u'package',
                     'task_type': u'metadata',
                     'key': u'celery_task_status',
-                    'value': str((task_id, 'waiting', None)),
+                    'value': str((package_info['id'], 'waiting', None)),
                     'error': u'',
                     'last_updated': datetime.now().isoformat()
                 }
