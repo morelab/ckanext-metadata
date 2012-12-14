@@ -8,6 +8,25 @@
 
   <div py:match="content">
     <h3>Current Metadata Tasks Status</h3>
+    <div id="dataset-information">
+
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th scope="col">Package</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr py:for='i, (package, status) in enumerate(c.task_status.items())'
+          rel="dc:relation" resource="_:extra${i}">
+          <td class="dataset-label" property="rdf:value">${package}</td>
+          <td class="dataset-details" property="rdf:value">${status}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    </div>
   </div>
   <xi:include href="layout.html" />
 </html>

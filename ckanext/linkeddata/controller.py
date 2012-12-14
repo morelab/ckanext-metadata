@@ -5,7 +5,7 @@ from logging import getLogger
 from ckan.controllers.package import PackageController
 from ckan.lib.base import BaseController
 from ckan.logic import get_action, NotFound
-from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, getTaskStatusValue
+from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, getTaskStatusValue, getTaskStatus
 
 from ckan.model.types import make_uuid
 from ckan.lib.celery_app import celery
@@ -41,6 +41,7 @@ class AdminController(BaseController):
         context = {'model': model, 'session': model.Session,'user': c.user}
         packages = get_action('package_list')(context, ())
 
+        #init tasks for disabled packages
         for package in packages:
             print 'Checking package %s status' % package
             package_info = get_action('package_show')(context, {'id': package})
@@ -54,7 +55,7 @@ class AdminController(BaseController):
                     'entity_type': u'package',
                     'task_type': u'metadata',
                     'key': u'celery_task_status',
-                    'value': str((package_info['id'], 'waiting', None)),
+                    'value': str((package_info['id'], None)),
                     'error': u'',
                     'last_updated': datetime.now().isoformat()
                 }
@@ -65,6 +66,14 @@ class AdminController(BaseController):
                 task_context = {'task_id': task_status['id'], 'site_url': config.get('ckan.site_url'), 'apikey': 'b1d895d3-5187-491c-8826-4c7f63fe84ab'}
                 celery.send_task("linkeddata.update_metadata", args=[task_context, package_info['id']], task_id=task_status['id'])
                 log.info('Task sent to celery for package %s' % package_info['id'])
+
+        #create table showing metadata tasks
+        c.task_status = {}
+        for package in packages:
+            package_info = get_action('package_show')(context, {'id': package})
+            task_status_value = getTaskStatusValue(context, package_info['id'])
+            if not task_status_value == 'disabled':
+                c.task_status[package_info['name']] = task_status_value
 
         return render('tasks/index.html')
 
