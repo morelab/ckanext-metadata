@@ -1,7 +1,9 @@
 # -*- coding: utf8 -*- 
 
-import uuid
-from ckan.logic import get_action
+from ckan.model.types import make_uuid
+from ckan.logic import get_action, NotFound
+
+from datetime import datetime
 
 def getExtraProperty(package_info, key):
         for extra_entry in package_info['extras']:
@@ -13,11 +15,11 @@ def createExtraProperty(package_info, key, value):
     extra_property = {}
     extra_property['state'] = 'active'
     extra_property['value'] = '"' + str(value) + '"'
-    extra_property['revision_timestamp'] = '2012-12-13T14:27:35.654886'
+    extra_property['revision_timestamp'] = datetime.now().isoformat()
     extra_property['package_id'] = package_info['id']
     extra_property['key'] = key
-    extra_property['revision_id'] = str(uuid.uuid4())
-    extra_property['id'] = str(uuid.uuid4())
+    extra_property['revision_id'] = make_uuid()
+    extra_property['id'] = make_uuid()
 
     package_info['extras'].append(extra_property)
     
@@ -32,8 +34,8 @@ def updateExtraProperty(package_info, key, value):
     for extra_data in package_info['extras']:
         if extra_data['key'] == key:
             extra_data['value'] = '"' + str(value) + '"'
-            extra_data['revision_id'] = str(uuid.uuid4())
-            extra_data['revision_timestamp'] = '2012-12-13T14:27:35.654886'
+            extra_data['revision_id'] = make_uuid()
+            extra_data['revision_timestamp'] = datetime.now().isoformat()
             return 
 
     package_info['extras'].append(extra_property)
@@ -66,3 +68,10 @@ def updatePackage(context, package_info):
     updated_info['notes'] = package_info['notes']
 
     updated_package = get_action('package_update')(context, updated_info)
+
+def getTaskStatus(context, id):
+    try:
+        task_status = get_action('task_status_show')(context, {'entity_id': id, 'task_type': 'metadata', 'key': 'celery_task_id'})
+        return ('waiting', task_status['value'])
+    except NotFound:
+        return ('disabled', None)

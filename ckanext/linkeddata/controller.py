@@ -4,11 +4,13 @@ from ckan.lib.base import render, c, model
 from logging import getLogger
 from ckan.controllers.package import PackageController
 from ckan.lib.base import BaseController
-from ckan.logic import get_action
-from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage
+from ckan.logic import get_action, NotFound
+from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, getTaskStatus
 
 from ckan.model.types import make_uuid
 from ckan.lib.celery_app import celery
+
+from datetime import datetime
 
 log = getLogger(__name__)
 
@@ -23,14 +25,11 @@ class MetadataController(PackageController):
         #check if metadada info exists and add it otherwise
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author}
         package_info = get_action('package_show')(context, {'id': c.pkg.id})
-        metadata_task_status = getExtraProperty(package_info, 'metadata_task_status')
-        if metadata_task_status is None:
-            createExtraProperty(package_info, 'metadata_task_status', 'changed')
-            metadata_task_status = getExtraProperty(package_info, 'metadata_task_status')
-            updatePackage(context, package_info)
-            log.info('Package metadata task status set to: "changed"') 
 
-        c.metadata_task_status = metadata_task_status
+        task_status = getTaskStatus(context, package_info['id'])
+
+        c.metadata_task_status = task_status[0]
+
         c.extra_metadata = {}
 
         #rendering using default template
@@ -48,12 +47,13 @@ class AdminController(BaseController):
             print 'Checking package %s status' % package
             package_info = get_action('package_show')(context, {'id': package})
 
-            if getExtraProperty(package_info, 'metadata_task_status') == 'changed':
+            task_status = getTaskStatus(context, package_info['id'])
+            if task_status[0] == 'disabled':
                 #launch task and change status to waiting
 
                 task_id = make_uuid()
                 task_status = {
-                    'entity_id': package,
+                    'entity_id': package_info['id'],
                     'entity_type': u'package',
                     'task_type': u'metadata',
                     'key': u'celery_task_id',
@@ -62,18 +62,9 @@ class AdminController(BaseController):
                     'last_updated': datetime.now().isoformat()
                 }
 
-                task_context = {
-                    'model': model, 
-                    'user': user.get('name'),
-                }
-
-                get_action('task_status_update')(task_context, task_status)
+                get_action('task_status_update')(context, task_status)
                 celery.send_task("linkeddata.update_metadata", args=[package_info['id']], task_id=task_id)
-
-                updateExtraProperty(package_info, 'metadata_task_status', 'waiting')
-                updatePackage(context, package_info)
-
-                log.info('Package metadata task status set to: "waiting"') 
+                log.info('Task sent to celery for package %s' % package_info['id'])
 
         return render('tasks/index.html')
 
