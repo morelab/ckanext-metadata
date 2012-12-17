@@ -69,17 +69,8 @@ def updatePackage(context, package_info):
 
     updated_package = get_action('package_update')(context, updated_info)
 
-def getTaskStatus(context, id):
-    try:
-        task_status = get_action('task_status_show')(context, {'entity_id': id, 'task_type': 'metadata', 'key': 'celery_task_status'})
-        return eval(task_status['value'])
-    except NotFound:
-        return None
-
-def getTaskStatusValue(task_status):
-    if task_status is None:
-        return 'disabled'
-    elif task_status[1] is None:
+def get_task_status_value(task_status):
+    if task_status[1] is None:
         return 'launched'
     elif task_status[1] is 'error':
         return 'error'

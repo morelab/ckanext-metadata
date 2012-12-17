@@ -6,8 +6,6 @@ from logging import getLogger
 from celery.schedules import crontab
 from celery.task import periodic_task
 
-from pmanager import getTaskStatusValue
-
 import time
 import json
 import urlparse
@@ -15,7 +13,7 @@ import requests
 
 from datetime import timedelta, datetime
 
-from pmanager import getTaskStatusValue
+from pmanager import get_task_status_value
 
 SITE_URL = 'http://127.0.0.1:5000/'
 API_URL = urlparse.urljoin(SITE_URL, 'api/action')
@@ -122,9 +120,12 @@ def launch_metadata_calculation():
         package_info = get_package_info(package_name)
 
         task_status = get_task_status(package_info['id'])
-        task_status_value = getTaskStatusValue(eval(task_status['value']))
+        if len(task_status) == 0:
+            task_status_value = None
+        else:
+            task_status_value = get_task_status_value(eval(task_status['value']))
 
-        if task_status_value not in ('launched'):
+        if task_status_value is None or task_status_value not in ('launched'):
             update_metadata(package_info)
         else:
             print 'Ignoring package %s because it was in status %s' % (package_name, task_status_value)
