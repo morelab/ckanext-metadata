@@ -67,7 +67,7 @@ def update_metadata(package_info):
 
     task_status = update_task_status(task_info)
 
-    time.sleep(5)
+    time.sleep(120)
 
     print 'Metadata task finished for package %s' % package_info['id']
 
