@@ -15,6 +15,8 @@ from datetime import timedelta, datetime
 
 from pmanager import get_task_status_value
 
+from celery.signals import beat_init
+
 SITE_URL = 'http://127.0.0.1:5000/'
 API_URL = urlparse.urljoin(SITE_URL, 'api/action')
 
@@ -25,6 +27,21 @@ DB_PASS = 'pass'
 
 DB_HOST = 'localhost'
 DB_NAME = 'rdfstore'
+
+def get_tasks_status():
+    tasks_status = {}
+
+    packages = get_package_list()
+
+    for package in packages:
+        package_info = get_package_info(package)
+
+        task_status = get_task_status(package_info['id'])
+        if len(task_status) > 0:
+            task_status_value = get_task_status_value(eval(task_status['value']))
+            tasks_status[package_info['name']] = (task_status['id'], task_status_value)
+
+    return tasks_status
 
 def update_task_status(task_info):
     res = requests.post(
@@ -39,6 +56,19 @@ def update_task_status(task_info):
         print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
         return None
 
+def delete_task_status(task_id):
+    res = requests.post(
+        API_URL + '/task_status_delete', json.dumps({'id': task_id}),
+        headers = {'Authorization': API_KEY,
+                   'Content-Type': 'application/json'}
+    )
+
+    if res.status_code == 200:
+        return True
+    else:
+        print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
+        return False
+
 def get_task_status(package_id):
     res = requests.post(
         API_URL + '/task_status_show', json.dumps({'entity_id': package_id, 'task_type': u'metadata', 'key': u'celery_task_status'}),
@@ -52,7 +82,7 @@ def get_task_status(package_id):
         print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
 
-def update_metadata(package_info):
+def obtain_metadata(package_info):
     print 'Updating metadata for package %s' % package_info['id']
 
     task_info = {
@@ -126,7 +156,18 @@ def launch_metadata_calculation():
             task_status_value = get_task_status_value(eval(task_status['value']))
 
         if task_status_value is None or task_status_value not in ('launched'):
-            update_metadata(package_info)
+            obtain_metadata(package_info)
         else:
             print 'Ignoring package %s because it was in status %s' % (package_name, task_status_value)
-        
+
+def clear_pending_tasks():
+    print 'Clearing pending tasks'
+
+    task_status = get_tasks_status()
+
+    for _, (task_id, status) in task_status.items():
+        if status == 'launched':
+            print 'Deleting task %s with status %s' % (task_id, status)
+            delete_task_status(task_id)
+
+clear_pending_tasks()
