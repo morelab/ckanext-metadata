@@ -45,7 +45,8 @@ class AdminController(BaseController):
         c.task_status = {}
         for package in packages:
             package_info = get_action('package_show')(context, {'id': package})
-            task_status_value = getTaskStatusValue(context, package_info['id'])
+            task_status = getTaskStatus(context, package_info['id'])
+            task_status_value = getTaskStatusValue(task_status)
             if not task_status_value == 'disabled':
                 c.task_status[package_info['name']] = task_status_value
 

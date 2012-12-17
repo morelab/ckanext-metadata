@@ -6,7 +6,7 @@ from logging import getLogger
 from celery.schedules import crontab
 from celery.task import periodic_task
 
-from pmanager import updateExtraProperty
+from pmanager import getTaskStatusValue
 
 import time
 import json
@@ -15,10 +15,20 @@ import requests
 
 from datetime import timedelta, datetime
 
+from pmanager import getTaskStatusValue
+
+# from swanalyzer.sparql_analyzer import SPARQLAnalyzer
+
 SITE_URL = 'http://127.0.0.1:5000/'
 API_URL = urlparse.urljoin(SITE_URL, 'api/action')
 
 API_KEY = 'b1d895d3-5187-491c-8826-4c7f63fe84ab'
+
+DB_USER = 'ckanuser'
+DB_PASS = 'pass'
+
+DB_HOST = 'localhost'
+DB_NAME = 'rdfstore'
 
 def update_task_status(task_info):
     res = requests.post(
@@ -31,7 +41,33 @@ def update_task_status(task_info):
         return json.loads(res.content)['result']
     else:
         print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
-        return ()
+        return None
+
+def get_task_status(package_id):
+    res = requests.post(
+        API_URL + '/task_status_show', json.dumps({'entity_id': package_id, 'task_type': u'metadata', 'key': u'celery_task_status'}),
+        headers = {'Authorization': API_KEY,
+                   'Content-Type': 'application/json'}
+    )
+
+    if res.status_code == 200:
+        return json.loads(res.content)['result']
+    else:
+        print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
+        return {}
+
+# def perform_analysis(sparql_endpoint, identifier):
+#     configString = 'user=' + DB_USER + ',password=' + DB_PASS + ',host=' + DB_HOST + ',db=' + DB_NAME + ''
+#     print 'Analyzing SPARQL endpoint %s with %s as identifier' % (sparql_endpoint, identifier)
+#     print 'Storing results with connection string: \'%s\'' % configString
+
+#     sparql_analyzer = SPARQLAnalyzer(sparql_endpoint, identifier, configString)
+#     sparql_analyzer.open()
+#     sparql_analyzer.load_graph()
+
+#     sparql_analyzer.close();
+
+#     print 'Analysis finished on SPARQL endpoint %s' % sparql_endpoint
 
 def update_metadata(package_info):
     print 'Updating metadata for package %s' % package_info['id']
@@ -49,10 +85,9 @@ def update_metadata(package_info):
     task_status = update_task_status(task_info)
 
     time.sleep(5)
+    #perform_analysis('http://www.morelab.deusto.es/joseki/articles', 'articles')
 
     print 'Metadata task finished for package %s' % package_info['id']
-    #update package status
-    #updateExtraProperty(package_info, 'metadata_task_status', 'updated')
 
     task_info = {
         'id': task_status['id'],
@@ -91,7 +126,7 @@ def get_package_info(package_name):
         return json.loads(res.content)['result']
     else:
         print 'ckan failed to show package information, status_code (%s), error %s' % (res.status_code, res.content)
-        return ()
+        return {}
 
 #@periodic_task(run_every=crontab(hour=9, minute=35))
 @periodic_task(run_every=timedelta(seconds=30))
@@ -101,4 +136,12 @@ def launch_metadata_calculation():
     package_list = get_package_list()
     for package_name in package_list:
         package_info = get_package_info(package_name)
-        update_metadata(package_info)
+
+        task_status = get_task_status(package_info['id'])
+        task_status_value = getTaskStatusValue(eval(task_status['value']))
+
+        if task_status_value not in ('launched'):
+            update_metadata(package_info)
+        else:
+            print 'Ignoring package %s because it was in status %s' % (package_name, task_status_value)
+        

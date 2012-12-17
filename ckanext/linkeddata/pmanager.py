@@ -76,9 +76,7 @@ def getTaskStatus(context, id):
     except NotFound:
         return None
 
-def getTaskStatusValue(context, id):
-    task_status = getTaskStatus(context, id)
-
+def getTaskStatusValue(task_status):
     if task_status is None:
         return 'disabled'
     elif task_status[1] is None:
