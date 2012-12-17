@@ -8,7 +8,6 @@ from ckan.logic import get_action, NotFound
 from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, get_task_status_value
 
 from ckan.model.types import make_uuid
-from ckan.lib.celery_app import celery
 
 from datetime import datetime
 
@@ -61,7 +60,7 @@ class AdminController(BaseController):
         return tasks_status
 
     def clear_finished_tasks(self, context):
-        log.info('Clearing pending tasks')
+        log.info('Clearing finished tasks')
 
         task_status = self.get_tasks_status(context)
 
