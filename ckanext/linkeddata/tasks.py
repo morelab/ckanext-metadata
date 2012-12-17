@@ -17,8 +17,6 @@ from datetime import timedelta, datetime
 
 from pmanager import getTaskStatusValue
 
-# from swanalyzer.sparql_analyzer import SPARQLAnalyzer
-
 SITE_URL = 'http://127.0.0.1:5000/'
 API_URL = urlparse.urljoin(SITE_URL, 'api/action')
 
@@ -56,19 +54,6 @@ def get_task_status(package_id):
         print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
 
-# def perform_analysis(sparql_endpoint, identifier):
-#     configString = 'user=' + DB_USER + ',password=' + DB_PASS + ',host=' + DB_HOST + ',db=' + DB_NAME + ''
-#     print 'Analyzing SPARQL endpoint %s with %s as identifier' % (sparql_endpoint, identifier)
-#     print 'Storing results with connection string: \'%s\'' % configString
-
-#     sparql_analyzer = SPARQLAnalyzer(sparql_endpoint, identifier, configString)
-#     sparql_analyzer.open()
-#     sparql_analyzer.load_graph()
-
-#     sparql_analyzer.close();
-
-#     print 'Analysis finished on SPARQL endpoint %s' % sparql_endpoint
-
 def update_metadata(package_info):
     print 'Updating metadata for package %s' % package_info['id']
 
@@ -85,7 +70,6 @@ def update_metadata(package_info):
     task_status = update_task_status(task_info)
 
     time.sleep(5)
-    #perform_analysis('http://www.morelab.deusto.es/joseki/articles', 'articles')
 
     print 'Metadata task finished for package %s' % package_info['id']
 
