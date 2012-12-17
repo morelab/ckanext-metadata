@@ -41,32 +41,6 @@ class AdminController(BaseController):
         context = {'model': model, 'session': model.Session,'user': c.user}
         packages = get_action('package_list')(context, ())
 
-        #init tasks for disabled packages
-        for package in packages:
-            print 'Checking package %s status' % package
-            package_info = get_action('package_show')(context, {'id': package})
-
-            task_status = getTaskStatusValue(context, package_info['id'])
-            if task_status == 'disabled':
-                #launch task and change status to waiting
-
-                task_status = {
-                    'entity_id': package_info['id'],
-                    'entity_type': u'package',
-                    'task_type': u'metadata',
-                    'key': u'celery_task_status',
-                    'value': str((package_info['id'], None)),
-                    'error': u'',
-                    'last_updated': datetime.now().isoformat()
-                }
-
-                #TODO: remove fixed user key
-                task_status = get_action('task_status_update')(context, task_status)
-
-                task_context = {'task_id': task_status['id'], 'site_url': config.get('ckan.site_url'), 'apikey': 'b1d895d3-5187-491c-8826-4c7f63fe84ab'}
-                celery.send_task("linkeddata.update_metadata", args=[task_context, package_info['id']], task_id=task_status['id'])
-                log.info('Task sent to celery for package %s' % package_info['id'])
-
         #create table showing metadata tasks
         c.task_status = {}
         for package in packages:
