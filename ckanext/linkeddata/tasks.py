@@ -12,10 +12,10 @@ import urlparse
 import requests
 
 from datetime import timedelta, datetime
-
 from pmanager import get_task_status_value
-
 from celery.signals import beat_init
+from swanalyzer.sparql_analyzer import SPARQLAnalyzer
+
 
 SITE_URL = 'http://127.0.0.1:5000/'
 API_URL = urlparse.urljoin(SITE_URL, 'api/action')
@@ -82,6 +82,36 @@ def get_task_status(package_id):
         print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
 
+def analyze_metadata(url):
+    results = {}
+
+    print 'Analyzing SPARQL endpoint on URL %s' % url
+    sparql_analyzer = SPARQLAnalyzer(url, 'data', 'user=ckanuser password=pass host=localhost dbname=rdfstore')
+    sparql_analyzer.open()
+
+    sparql_analyzer.load_graph()
+
+    results['classes'] = len(sparql_analyzer.get_classes())
+    results['properties'] = len(sparql_analyzer.get_properties())
+    results['subjects'] = len(sparql_analyzer.get_subjects())
+    results['objects'] = len(sparql_analyzer.get_objects())
+    results['instances'] len(sparql_analyzer.get_all_links())
+    results['entities'] = len(sparql_analyzer.get_entities())
+    results['outgoing_links'] = len(sparql_analyzer.get_outgoing_links())
+    results['linksets'] = sparql_analyzer.get_linksets()
+
+    results['class_instances'] = {}
+    for c in sparql_analyzer.get_classes():
+        results['class_instances'][c] = sparql_analyzer.get_class_instances(c)
+
+    results['property_count'] = {}
+    for p in sparql_analyzer.get_properties():
+        results['property_count'][p] = sparql_analyzer.get_property_count(p)
+
+    sparql_analyzer.close()
+
+    return results
+
 def obtain_metadata(package_info):
     print 'Updating metadata for package %s' % package_info['id']
 
@@ -99,7 +129,7 @@ def obtain_metadata(package_info):
 
     for resource in package_info['resources']:
         if resource['resource_type'] == 'api' and resource['format'] == 'API/SPARQL':
-            print 'Resource name %s with URL %s' % (resource['name'], resource['url'])
+            analyze_metadata(resource['url'])
 
     print 'Metadata task finished for package %s' % package_info['id']
 
