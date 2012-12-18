@@ -97,7 +97,9 @@ def obtain_metadata(package_info):
 
     task_status = update_task_status(task_info)
 
-    time.sleep(120)
+    for resource in package_info['resources']:
+        if resource['resource_type'] == 'api' and resource['format'] == 'API/SPARQL':
+            print 'Resource name %s with URL %s' % (resource['name'], resource['url'])
 
     print 'Metadata task finished for package %s' % package_info['id']
 
