@@ -4,7 +4,7 @@ import sys, os
 version = '0.1'
 
 setup(
-	name='ckanext-linkeddata',
+	name='ckanext-metadata',
 	version=version,
 	description="Metadata generator and visualization for ADAPTA",
 	long_description="""\
@@ -16,7 +16,7 @@ setup(
 	url='http://www.morelab.deusto.es',
 	license='GPL',
 	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-	namespace_packages=['ckanext', 'ckanext.linkeddata'],
+	namespace_packages=['ckanext', 'ckanext.metadata'],
 	include_package_data=True,
 	zip_safe=False,
 	install_requires=[
@@ -26,9 +26,9 @@ setup(
 	"""
     [ckan.plugins]
 		# Add plugins here, eg
-		metadata=ckanext.linkeddata.plugin:MetadataExtension
+		metadata=ckanext.metadata.plugin:MetadataExtension
 		
 	[ckan.celery_task]
-		tasks = ckanext.linkeddata.celery_import:task_imports
+		tasks = ckanext.metadata.celery_import:task_imports
 	""",
 )
