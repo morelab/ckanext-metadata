@@ -5,7 +5,7 @@ from logging import getLogger
 from ckan.controllers.package import PackageController
 from ckan.lib.base import BaseController
 from ckan.logic import get_action, NotFound
-from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, get_task_status_value
+from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, get_task_status_value, checkExtraProperty
 
 from ckan.model.types import make_uuid
 
@@ -22,6 +22,12 @@ def get_task_status(context, id):
         return None
 
 class MetadataController(PackageController):
+
+    def get_metadata_keys(self, package_info):
+        if checkExtraProperty(package_info, 'metadata_keys'):
+            return eval(getExtraProperty(package_info, 'metadata_keys'))
+        return ()
+
         
     def show_metadata(self, id):
         log.info('Showing metadata for id: %s' % id)         
@@ -33,9 +39,11 @@ class MetadataController(PackageController):
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author}
         package_info = get_action('package_show')(context, {'id': c.pkg.id})
 
-        c.metadata_task_status = get_task_status_value(context, package_info['id'])
+        c.metadata_task_status = get_task_status_value(package_info['id'])
 
         c.extra_metadata = {}
+        for key in self.get_metadata_keys(package_info):
+            c.extra_metadata[key] = getExtraProperty(package_info, key)
 
         #rendering using default template
         return render('metadata/read.html')
