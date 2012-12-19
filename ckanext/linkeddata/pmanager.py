@@ -45,7 +45,7 @@ def deleteExtraProperty(package_info, key):
         if extra_data['key'] == key:
             package_info['extras'].remove(extra_data)
 
-def updatePackage(context, package_info):
+def createUpdatedInfo(package_info):
     updated_info = {}
 
     #set log message 
@@ -66,9 +66,15 @@ def updatePackage(context, package_info):
     updated_info['version'] = package_info['version']
     updated_info['license_id'] = package_info['license_id']
     updated_info['notes'] = package_info['notes']
+    updated_info['resources'] = package_info['resources']
+
+    return updated_info
+
+def updatePackage(context, package_info):
+    update_info = createUpdatedInfo(package_info)
 
     updated_package = get_action('package_update')(context, updated_info)
-
+ 
 def get_task_status_value(task_status):
     if task_status[1] is None:
         return 'launched'
