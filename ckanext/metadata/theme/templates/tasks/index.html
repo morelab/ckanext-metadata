@@ -1,0 +1,46 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  py:strip="">
+
+  <py:def function="page_title">Administration Dashboard</py:def>
+  <py:def function="page_heading">Administration Dashboard</py:def>
+
+
+  <div py:match="content">
+    <h3>Metadata Tasks Status</h3>
+
+    <form 
+      id="pending-tasks-delete" 
+      action="/ckan-admin/metadata-tasks" 
+      method="post"
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+      <button class="btn btn-primary" type="submit" id="button">Clear Finished Tasks</button>
+      <input type="hidden" name="clear" value="submitted" />
+    </form>
+
+    <div id="dataset-information">
+
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th scope="col">Package</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr py:for='i, (package, (task_id, status)) in enumerate(c.task_status.items())'
+          rel="dc:relation" resource="_:extra${i}">
+          <td class="dataset-label" property="rdf:value">${package}</td>
+          <td class="dataset-details" property="rdf:value">${status}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    </div>
+  </div>
+  <xi:include href="layout.html" />
+</html>
+
