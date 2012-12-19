@@ -131,8 +131,12 @@ def analyze_metadata(url):
     return results
 
 def update_metadata(package_info, metadata):
+    metadata_keys = []
     for key, value in metadata.items():
         createExtraProperty(package_info, key, value)
+        metadata_keys.append(key)
+
+    createExtraProperty(package_info, 'metadata_keys', str(metadata_keys))
 
     return updatePackage(package_info)
 
