@@ -19,10 +19,10 @@ class MetadataExtension(SingletonPlugin):
         here = os.path.dirname(__file__)
         rootdir = os.path.dirname(os.path.dirname(here))
         our_public_dir = os.path.join(rootdir, 'ckanext', 
-				'linkeddata', 'theme', 'public')
+				'metadata', 'theme', 'public')
                                       
         template_dir = os.path.join(rootdir, 'ckanext',
-				'linkeddata', 'theme', 'templates')
+				'metadata', 'theme', 'templates')
 				
         # set resource and template overrides
         config['extra_public_paths'] = ','.join([our_public_dir,
@@ -35,7 +35,7 @@ class MetadataExtension(SingletonPlugin):
         routes = request.environ.get('pylons.routes_dict')
         log.info(routes)
         if routes.get('controller') in ('package', 'related',
-			'ckanext.linkeddata.controller:MetadataController') :
+			'ckanext.metadata.controller:MetadataController') :
                stream = stream | Transformer('//ul[@class="nav nav-pills"]').append(HTML(
                     
                     '''<li class>
@@ -47,7 +47,7 @@ class MetadataExtension(SingletonPlugin):
                     
                 ))
                 
-        if routes.get('controller') in ('admin', 'ckanext.linkeddata.controller:AdminController'):
+        if routes.get('controller') in ('admin', 'ckanext.metadata.controller:AdminController'):
 			 stream = stream | Transformer('//ul[@class="nav nav-pills"]').append(HTML(
                     
                     '''<li class>
@@ -62,8 +62,8 @@ class MetadataExtension(SingletonPlugin):
         return stream
        
     def before_map(self, map):
-        map.connect('/dataset/metadata/{id}', controller='ckanext.linkeddata.controller:MetadataController', action='show_metadata')
-        map.connect('/ckan-admin/metadata-tasks', controller='ckanext.linkeddata.controller:AdminController', action='metadata_tasks')
+        map.connect('/dataset/metadata/{id}', controller='ckanext.metadata.controller:MetadataController', action='show_metadata')
+        map.connect('/ckan-admin/metadata-tasks', controller='ckanext.metadata.controller:AdminController', action='metadata_tasks')
 
         return map
         
