@@ -102,7 +102,7 @@ def analyze_metadata(url):
     results = {}
 
     print 'Analyzing SPARQL endpoint on URL %s' % url
-    sparql_analyzer = SPARQLAnalyzer('http://helheim.deusto.es:8894/sparql', 'turismo', 'user=ckanuser password=pass host=localhost dbname=rdfstore', None, False)
+    sparql_analyzer = SPARQLAnalyzer(url, 'turismo', 'user=ckanuser password=pass host=localhost dbname=rdfstore', None, False)
     sparql_analyzer.open()
 
     sparql_analyzer.load_graph()
