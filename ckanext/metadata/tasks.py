@@ -14,7 +14,7 @@ import requests
 from datetime import timedelta, datetime
 from pmanager import get_task_status_value, createUpdatedInfo, createExtraProperty
 from celery.signals import beat_init
-from swanalyzer.sparql_analyzer import SPARQLAnalyzer
+from swanalyzer.sparql_analyzer import SPARQLAnalyzer, check_sparql_endpoint
 
 
 SITE_URL = 'http://127.0.0.1:5000/'
@@ -102,43 +102,49 @@ def analyze_metadata(url):
     results = {}
 
     print 'Analyzing SPARQL endpoint on URL %s' % url
-    sparql_analyzer = SPARQLAnalyzer(url, 'turismo', 'user=ckanuser password=pass host=localhost dbname=rdfstore', None, False)
-    sparql_analyzer.open()
 
-    sparql_analyzer.load_graph()
+    if check_sparql_endpoint(url):
+        sparql_analyzer = SPARQLAnalyzer(url, 'turismo', 'user=ckanuser password=pass host=localhost dbname=rdfstore', None, False)
+        sparql_analyzer.open()
 
-    properties = sparql_analyzer.get_properties()
+        sparql_analyzer.load_graph()
 
-    results['classes'] = len(sparql_analyzer.get_classes())
-    results['properties'] = len(properties)
-    results['subjects'] = len(sparql_analyzer.get_subjects())
-    results['objects'] = len(sparql_analyzer.get_objects())
-    results['instances'] = len(sparql_analyzer.get_all_links())
-    results['entities'] = len(sparql_analyzer.get_entities())
-    # results['linksets'] = sparql_analyzer.get_linksets()
+        results['accesible'] = str(True)
 
-    class_dict = {}
-    for c in sparql_analyzer.get_classes():
-        c = c[0]
-        class_dict[c] = len(sparql_analyzer.get_class_instances(c))
-    results['class_instances'] = str(class_dict)
+        properties = sparql_analyzer.get_properties()
 
-    property_dict = {}
-    for p in sparql_analyzer.get_properties():
-        p = p[0]
-        property_dict[p] = len(sparql_analyzer.get_property_count(p))
-    results['property_count'] = str(property_dict)
+        results['classes'] = len(sparql_analyzer.get_classes())
+        results['properties'] = len(properties)
+        results['subjects'] = len(sparql_analyzer.get_subjects())
+        results['objects'] = len(sparql_analyzer.get_objects())
+        results['instances'] = len(sparql_analyzer.get_all_links())
+        results['entities'] = len(sparql_analyzer.get_entities())
+        # results['linksets'] = sparql_analyzer.get_linksets()
 
-    results['triples'] = len(sparql_analyzer.get_triples())
-    results['all_links'] = len(sparql_analyzer.get_all_links())
-    results['ingoing_links'] = len(sparql_analyzer.get_inner_links())
-    results['outgoing_links'] = len(sparql_analyzer.get_inner_links())
-    results['inner_links'] = len(sparql_analyzer.get_inner_links())
+        class_dict = {}
+        for c in sparql_analyzer.get_classes():
+            c = c[0]
+            class_dict[c] = len(sparql_analyzer.get_class_instances(c))
+        results['class_instances'] = str(class_dict)
 
-    property_list = [str(p[0].encode('utf-8')) for p in properties]
-    results['vocabularies'] = str(sparql_analyzer.get_patterns(property_list))
+        property_dict = {}
+        for p in sparql_analyzer.get_properties():
+            p = p[0]
+            property_dict[p] = len(sparql_analyzer.get_property_count(p))
+        results['property_count'] = str(property_dict)
 
-    sparql_analyzer.close()
+        results['triples'] = len(sparql_analyzer.get_triples())
+        results['all_links'] = len(sparql_analyzer.get_all_links())
+        results['ingoing_links'] = len(sparql_analyzer.get_inner_links())
+        results['outgoing_links'] = len(sparql_analyzer.get_inner_links())
+        results['inner_links'] = len(sparql_analyzer.get_inner_links())
+
+        property_list = [str(p[0].encode('utf-8')) for p in properties]
+        results['vocabularies'] = str(sparql_analyzer.get_patterns(property_list))
+
+        sparql_analyzer.close()
+    else:
+        results['accesible'] = str(False)
 
     return results
 
