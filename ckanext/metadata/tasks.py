@@ -20,7 +20,7 @@ from swanalyzer.sparql_analyzer import SPARQLAnalyzer
 SITE_URL = 'http://127.0.0.1:5000/'
 API_URL = urlparse.urljoin(SITE_URL, 'api/action')
 
-API_KEY = '7ca62ea1-908c-4ce8-a40c-d0924e897b34'
+API_KEY = '5386a00d-d027-4233-8919-8c68e0ec1d04'
 
 DB_USER = 'ckanuser'
 DB_PASS = 'pass'
@@ -107,24 +107,36 @@ def analyze_metadata(url):
 
     sparql_analyzer.load_graph()
 
+    properties = sparql_analyzer.get_properties()
+
     results['classes'] = len(sparql_analyzer.get_classes())
-    results['properties'] = len(sparql_analyzer.get_properties())
+    results['properties'] = len(properties)
     results['subjects'] = len(sparql_analyzer.get_subjects())
     results['objects'] = len(sparql_analyzer.get_objects())
     results['instances'] = len(sparql_analyzer.get_all_links())
     results['entities'] = len(sparql_analyzer.get_entities())
-    results['outgoing_links'] = len(sparql_analyzer.get_outgoing_links())
     # results['linksets'] = sparql_analyzer.get_linksets()
 
-    # results['class_instances'] = {}
-    # for c in sparql_analyzer.get_classes():
-    #     c = c[0]
-    #     results['class_instances'][c] = len(sparql_analyzer.get_class_instances(c))
+    class_dict = {}
+    for c in sparql_analyzer.get_classes():
+        c = c[0]
+        class_dict[c] = len(sparql_analyzer.get_class_instances(c))
+    results['class_instances'] = str(class_dict)
 
-    # results['property_count'] = {}
-    # for p in sparql_analyzer.get_properties():
-    #     p = p[0]
-    #     results['property_count'][p] = len(sparql_analyzer.get_property_count(p))
+    property_dict = {}
+    for p in sparql_analyzer.get_properties():
+        p = p[0]
+        property_dict[p] = len(sparql_analyzer.get_property_count(p))
+    results['property_count'] = str(property_dict)
+
+    results['triples'] = len(sparql_analyzer.get_triples())
+    results['all_links'] = len(sparql_analyzer.get_all_links())
+    results['ingoing_links'] = len(sparql_analyzer.get_inner_links())
+    results['outgoing_links'] = len(sparql_analyzer.get_inner_links())
+    results['inner_links'] = len(sparql_analyzer.get_inner_links())
+
+    property_list = [str(p[0].encode('utf-8')) for p in properties]
+    results['vocabularies'] = sparql_analyzer.get_patterns(property_list)
 
     sparql_analyzer.close()
 
@@ -143,13 +155,12 @@ def update_metadata(package_info, metadata):
 def obtain_metadata(package_info):
     print 'Updating metadata for package %s' % package_info['id']
 
-    resource_url = None
+    sparql_endpoints = []
     for resource in package_info['resources']:
         if resource['resource_type'] == 'api' and resource['format'] == 'API/SPARQL':
-            resource_url = resource['url']
-            break
+            sparql_endpoints.append(resource['url'])
 
-    if not resource_url is None:
+    if len(sparql_endpoints) > 0:
         task_info = {
             'entity_id': package_info['id'],
             'entity_type': u'package',
@@ -162,7 +173,7 @@ def obtain_metadata(package_info):
 
         task_status = update_task_status(task_info)
 
-        results = analyze_metadata(resource['url'])
+        results = analyze_metadata(sparql_endpoints[0])
 
         error = update_metadata(package_info, results)
 
@@ -182,6 +193,8 @@ def obtain_metadata(package_info):
         }
 
         update_task_status(task_info)
+
+        results['sparql_endpoints'] = len(sparql_endpoints)
 
 def get_package_list():
     res = requests.post(
