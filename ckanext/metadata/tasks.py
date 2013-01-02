@@ -136,7 +136,7 @@ def analyze_metadata(url):
     results['inner_links'] = len(sparql_analyzer.get_inner_links())
 
     property_list = [str(p[0].encode('utf-8')) for p in properties]
-    results['vocabularies'] = sparql_analyzer.get_patterns(property_list)
+    results['vocabularies'] = str(sparql_analyzer.get_patterns(property_list))
 
     sparql_analyzer.close()
 
