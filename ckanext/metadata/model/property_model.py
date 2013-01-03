@@ -6,7 +6,7 @@ import sqlalchemy
 metadata = MetaData()
 property_table = Table('property_table', metadata,
 		Column('package_id', UnicodeText, primary_key=True),
-        Column('key', UnicodeText, nullable=False),
+        Column('key', UnicodeText, primary_key=True),
         Column('value', UnicodeText, nullable=False),
 )
 
