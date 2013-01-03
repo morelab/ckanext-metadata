@@ -18,7 +18,7 @@ from swanalyzer.sparql_analyzer import SPARQLAnalyzer, check_sparql_endpoint
 
 
 SITE_URL = 'http://127.0.0.1:5000/'
-API_URL = urlparse.urljoin(SITE_URL, 'api/action')
+API_URL = urlparse.urljoin(SITE_URL, 'api/')
 
 API_KEY = '5386a00d-d027-4233-8919-8c68e0ec1d04'
 
@@ -46,7 +46,7 @@ def get_tasks_status():
 def update_task_status(task_info):
     print "Updating task status for entity_id %s" % task_info['entity_id']
     res = requests.post(
-        API_URL + '/task_status_update', json.dumps(task_info),
+        API_URL + 'action/task_status_update', json.dumps(task_info),
         headers = {'Authorization': API_KEY,
                    'Content-Type': 'application/json'}
     )
@@ -59,7 +59,7 @@ def update_task_status(task_info):
 
 def delete_task_status(task_id):
     res = requests.post(
-        API_URL + '/task_status_delete', json.dumps({'id': task_id}),
+        API_URL + 'action/task_status_delete', json.dumps({'id': task_id}),
         headers = {'Authorization': API_KEY,
                    'Content-Type': 'application/json'}
     )
@@ -72,7 +72,7 @@ def delete_task_status(task_id):
 
 def get_task_status(package_id):
     res = requests.post(
-        API_URL + '/task_status_show', json.dumps({'entity_id': package_id, 'task_type': u'metadata', 'key': u'celery_task_status'}),
+        API_URL + 'action/task_status_show', json.dumps({'entity_id': package_id, 'task_type': u'metadata', 'key': u'celery_task_status'}),
         headers = {'Authorization': API_KEY,
                    'Content-Type': 'application/json'}
     )
@@ -80,14 +80,14 @@ def get_task_status(package_id):
     if res.status_code == 200:
         return json.loads(res.content)['result']
     else:
-        print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
+        print 'ckan failed to get task_status, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
 
 def updatePackage(package_info):
     updated_info = createUpdatedInfo(package_info)
 
     res = requests.post(
-        API_URL + '/package_update', json.dumps(updated_info),
+        API_URL + 'action/package_update', json.dumps(updated_info),
         headers = {'Authorization': API_KEY,
                    'Content-Type': 'application/json'}
     )
@@ -96,6 +96,24 @@ def updatePackage(package_info):
         return True
     else:
         print 'ckan failed to update package info, status_code (%s), error %s' % (res.status_code, res.content)
+        return False
+
+def updatePackageProperties(package_id, properties):
+    data = {}
+    data['package_id'] = package_id
+    for key, value in properties.items():
+        data[key] = value
+
+    res = requests.post(
+        API_URL + '2/update/package/properties', json.dumps({'package_id': package_id, 'task_type': u'metadata', 'key': u'celery_task_status'}),
+        headers = {'Authorization': API_KEY,
+                   'Content-Type': 'application/xml'}
+    )
+
+    if res.status_code == 200:
+        return True
+    else:
+        print 'ckan failed to update package properties, status_code (%s), error %s' % (res.status_code, res.content)
         return False
 
 def analyze_metadata(url):
@@ -121,17 +139,17 @@ def analyze_metadata(url):
         results['entities'] = len(sparql_analyzer.get_entities())
         # results['linksets'] = sparql_analyzer.get_linksets()
 
-        class_dict = {}
-        for c in sparql_analyzer.get_classes():
-            c = c[0]
-            class_dict[c] = len(sparql_analyzer.get_class_instances(c))
-        results['class_instances'] = str(class_dict)
+        # class_dict = {}
+        # for c in sparql_analyzer.get_classes():
+        #     c = c[0]
+        #     class_dict[c] = len(sparql_analyzer.get_class_instances(c))
+        # results['class_instances'] = str(class_dict)
 
-        property_dict = {}
-        for p in sparql_analyzer.get_properties():
-            p = p[0]
-            property_dict[p] = len(sparql_analyzer.get_property_count(p))
-        results['property_count'] = str(property_dict)
+        # property_dict = {}
+        # for p in sparql_analyzer.get_properties():
+        #     p = p[0]
+        #     property_dict[p] = len(sparql_analyzer.get_property_count(p))
+        # results['property_count'] = str(property_dict)
 
         results['triples'] = len(sparql_analyzer.get_triples())
         results['all_links'] = len(sparql_analyzer.get_all_links())
@@ -204,7 +222,7 @@ def obtain_metadata(package_info):
 
 def get_package_list():
     res = requests.post(
-        API_URL + '/package_list', json.dumps({}),
+        API_URL + 'action/package_list', json.dumps({}),
         headers = {'Authorization': API_KEY,
                    'Content-Type': 'application/json'}
     )
@@ -217,7 +235,7 @@ def get_package_list():
 
 def get_package_info(package_name):
     res = requests.post(
-        API_URL + '/package_show', json.dumps({'id': package_name}),
+        API_URL + 'action/package_show', json.dumps({'id': package_name}),
         headers = {'Authorization': API_KEY,
                    'Content-Type': 'application/json'}
     )
@@ -244,7 +262,8 @@ def launch_metadata_calculation():
             task_status_value = get_task_status_value(eval(task_status['value']))
 
         if task_status_value is None or task_status_value not in ('launched'):
-            obtain_metadata(package_info)
+            #obtain_metadata(package_info)
+            updatePackageProperties(package_info['id'], {})
         else:
             print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
 

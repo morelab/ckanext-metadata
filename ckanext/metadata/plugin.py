@@ -64,6 +64,7 @@ class MetadataExtension(SingletonPlugin):
     def before_map(self, map):
         map.connect('/dataset/metadata/{id}', controller='ckanext.metadata.controller:MetadataController', action='show_metadata')
         map.connect('/ckan-admin/metadata-tasks', controller='ckanext.metadata.controller:AdminController', action='metadata_tasks')
+        map.connect('api_update_properties', '/api/2/update/package/properties', controller='ckanext.metadata.controller:ApiController', action='update_properties')
 
         return map
         

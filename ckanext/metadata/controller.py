@@ -3,7 +3,8 @@
 from ckan.lib.base import render, c, model, config, request
 from logging import getLogger
 from ckan.controllers.package import PackageController
-from ckan.lib.base import BaseController
+from ckan.controllers.api import ApiController as BaseApiController 
+from ckan.lib.base import BaseController, abort
 from ckan.logic import get_action, NotFound
 from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, get_task_status_value, checkExtraProperty
 
@@ -109,3 +110,13 @@ class AdminController(BaseController):
 
         return render('tasks/index.html')
 
+class ApiController(BaseApiController):
+
+    def update_properties(self):
+        log.info("Request params: %s " % request.params)
+        error_400_msg = 'Please provide a suitable package_id parameter'
+
+        if not 'package_id' in request.params:
+            abort(400,error_400_msg)
+
+        return self._finish_ok(output)
