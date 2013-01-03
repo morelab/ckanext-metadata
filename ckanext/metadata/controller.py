@@ -12,6 +12,8 @@ from ckan.model.types import make_uuid
 
 from datetime import datetime
 
+from model.property_model import Property
+
 log = getLogger(__name__)
 
 def get_task_status(context, id):
@@ -23,11 +25,6 @@ def get_task_status(context, id):
         return None
 
 class MetadataController(PackageController):
-
-    def get_metadata_keys(self, package_info):
-        if checkExtraProperty(package_info, 'metadata_keys'):
-            return eval(getExtraProperty(package_info, 'metadata_keys'))
-        return ()
 
     def count_vocabulary_usage(self, vocabularies, current_package_id, context):
         vocab_count = {}
@@ -58,13 +55,16 @@ class MetadataController(PackageController):
         c.metadata_task_status = get_task_status_value(package_info['id'])
 
         c.extra_metadata = {}
-        for key in self.get_metadata_keys(package_info):
-            if key == 'vocabularies':
-                vocabularies = eval(getExtraProperty(package_info, key))
-                vocab_count = self.count_vocabulary_usage(vocabularies, c.pkg.id, context)
-                c.extra_metadata[key] = str(vocab_count)
-            else:
-                c.extra_metadata[key] = getExtraProperty(package_info, key)
+
+        properties = model.Session.query(Property).filter_by(package_id=c.pkg.id)
+
+        for property in properties:
+            # if property.key == 'vocabularies':
+            #     # vocabularies = eval(getExtraProperty(package_info, key))
+            #     # vocab_count = self.count_vocabulary_usage(vocabularies, c.pkg.id, context)
+            #     # c.extra_metadata[key] = str(vocab_count)
+            # else:
+            c.extra_metadata[property.key] = property.value
 
         #rendering using default template
         return render('metadata/read.html')
@@ -113,10 +113,19 @@ class AdminController(BaseController):
 class ApiController(BaseApiController):
 
     def update_properties(self):
-        log.info("Request params: %s " % request.params)
         error_400_msg = 'Please provide a suitable package_id parameter'
 
-        if not 'package_id' in request.params:
+        request = self._get_request_data()
+
+        if not 'package_id' in request:
             abort(400,error_400_msg)
 
-        return self._finish_ok(output)
+        log.info("Updating properties for package %s" % request['package_id'])
+        for key, value in request.items():
+            if not key == 'package_id':
+                property = Property(request['package_id'], key, value)
+                model.Session.merge(property)
+
+        model.Session.commit()
+
+        return self._finish_ok({})

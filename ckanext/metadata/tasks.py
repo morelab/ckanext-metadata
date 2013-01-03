@@ -12,7 +12,7 @@ import urlparse
 import requests
 
 from datetime import timedelta, datetime
-from pmanager import get_task_status_value, createUpdatedInfo, createExtraProperty
+from pmanager import get_task_status_value
 from celery.signals import beat_init
 from swanalyzer.sparql_analyzer import SPARQLAnalyzer, check_sparql_endpoint
 
@@ -105,9 +105,9 @@ def updatePackageProperties(package_id, properties):
         data[key] = value
 
     res = requests.post(
-        API_URL + '2/update/package/properties', json.dumps({'package_id': package_id, 'task_type': u'metadata', 'key': u'celery_task_status'}),
+        API_URL + '2/update/package/properties', json.dumps(data),
         headers = {'Authorization': API_KEY,
-                   'Content-Type': 'application/xml'}
+                   'Content-Type': 'application/json'}
     )
 
     if res.status_code == 200:
@@ -166,16 +166,6 @@ def analyze_metadata(url):
 
     return results
 
-def update_metadata(package_info, metadata):
-    metadata_keys = []
-    for key, value in metadata.items():
-        createExtraProperty(package_info, key, value)
-        metadata_keys.append(key)
-
-    createExtraProperty(package_info, 'metadata_keys', str(metadata_keys))
-
-    return updatePackage(package_info)
-
 def obtain_metadata(package_info):
     print 'Updating metadata for package %s' % package_info['id']
 
@@ -197,9 +187,9 @@ def obtain_metadata(package_info):
 
         task_status = update_task_status(task_info)
 
-        results = analyze_metadata(sparql_endpoints[0])
+        metadata = analyze_metadata(sparql_endpoints[0])
 
-        error = update_metadata(package_info, results)
+        updatePackageProperties(package_info['id'], metadata)
 
         print 'Metadata task finished for package %s' % package_info['id']
 
@@ -218,7 +208,7 @@ def obtain_metadata(package_info):
 
         update_task_status(task_info)
 
-        results['sparql_endpoints'] = len(sparql_endpoints)
+        metadata['sparql_endpoints'] = len(sparql_endpoints)
 
 def get_package_list():
     res = requests.post(
@@ -262,8 +252,7 @@ def launch_metadata_calculation():
             task_status_value = get_task_status_value(eval(task_status['value']))
 
         if task_status_value is None or task_status_value not in ('launched'):
-            #obtain_metadata(package_info)
-            updatePackageProperties(package_info['id'], {})
+            obtain_metadata(package_info)
         else:
             print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
 
