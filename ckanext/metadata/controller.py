@@ -1,4 +1,4 @@
-+# -*- coding: utf8 -*- 
+# -*- coding: utf8 -*- 
 
 from ckan.lib.base import render, c, model, config, request
 from logging import getLogger
@@ -40,7 +40,7 @@ class MetadataController(PackageController):
             for vocabulary in vocabularies:
                 if vocabulary in package_vocabularies:
                     vocab_count[vocabulary] += 1
-                    
+
         return vocab_count
         
     def show_metadata(self, id):
