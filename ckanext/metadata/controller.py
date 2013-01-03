@@ -28,7 +28,7 @@ class MetadataController(PackageController):
             return eval(getExtraProperty(package_info, 'metadata_keys'))
         return ()
 
-    def count_vocabulary_usage(self, vocabularies, context):
+    def count_vocabulary_usage(self, vocabularies, current_package_id, context):
         vocab_count = {}
         for vocabulary in vocabularies:
             vocab_count[vocabulary] = 0
@@ -36,10 +36,11 @@ class MetadataController(PackageController):
         packages = get_action('package_list')(context, ())
         for package in packages:
             package_info = get_action('package_show')(context, {'id': package})
-            package_vocabularies = eval(getExtraProperty(package_info, key))
-            for vocabulary in vocabularies:
-                if vocabulary in package_vocabularies:
-                    vocab_count[vocabulary] += 1
+            if not package_info['id'] == current_package_id and checkExtraProperty(package_info, 'vocabularies'):
+                package_vocabularies = eval(getExtraProperty(package_info, 'vocabularies'))
+                for vocabulary in vocabularies:
+                    if vocabulary in package_vocabularies:
+                        vocab_count[vocabulary] += 1
 
         return vocab_count
         
@@ -59,9 +60,8 @@ class MetadataController(PackageController):
         for key in self.get_metadata_keys(package_info):
             if key == 'vocabularies':
                 vocabularies = eval(getExtraProperty(package_info, key))
-                vocab_count = self.count_vocabulary_usage(vocabularies, context)
-                for key, value in vocab_count.items():
-                    c.extra_metadata[key] = value
+                vocab_count = self.count_vocabulary_usage(vocabularies, c.pkg.id, context)
+                c.extra_metadata[key] = str(vocab_count)
             else:
                 c.extra_metadata[key] = getExtraProperty(package_info, key)
 
