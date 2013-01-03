@@ -6,7 +6,7 @@ from ckan.controllers.package import PackageController
 from ckan.controllers.api import ApiController as BaseApiController 
 from ckan.lib.base import BaseController, abort
 from ckan.logic import get_action, NotFound
-from pmanager import getExtraProperty, updateExtraProperty, createExtraProperty, updatePackage, get_task_status_value, checkExtraProperty
+from pmanager import updatePackage, get_task_status_value
 
 from ckan.model.types import make_uuid
 
@@ -34,8 +34,8 @@ class MetadataController(PackageController):
         packages = get_action('package_list')(context, ())
         for package in packages:
             package_info = get_action('package_show')(context, {'id': package})
-            if not package_info['id'] == current_package_id and checkExtraProperty(package_info, 'vocabularies'):
-                package_vocabularies = eval(getExtraProperty(package_info, 'vocabularies'))
+            if not package_info['id'] == current_package_id:
+                package_vocabularies = eval(model.Session.query(Property).filter_by(package_id=c.pkg.id, key='vocabularies'))
                 for vocabulary in vocabularies:
                     if vocabulary in package_vocabularies:
                         vocab_count[vocabulary] += 1
@@ -59,12 +59,12 @@ class MetadataController(PackageController):
         properties = model.Session.query(Property).filter_by(package_id=c.pkg.id)
 
         for property in properties:
-            # if property.key == 'vocabularies':
-            #     # vocabularies = eval(getExtraProperty(package_info, key))
-            #     # vocab_count = self.count_vocabulary_usage(vocabularies, c.pkg.id, context)
-            #     # c.extra_metadata[key] = str(vocab_count)
-            # else:
-            c.extra_metadata[property.key] = property.value
+            if property.key == 'vocabularies':
+                vocabularies = eval(property.value)
+                vocab_count = self.count_vocabulary_usage(vocabularies, c.pkg.id, context)
+                c.extra_metadata[key] = str(vocab_count)
+            else:
+                c.extra_metadata[property.key] = property.value
 
         #rendering using default template
         return render('metadata/read.html')
