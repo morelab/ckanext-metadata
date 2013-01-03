@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*- 
++# -*- coding: utf8 -*- 
 
 from ckan.lib.base import render, c, model, config, request
 from logging import getLogger
@@ -28,6 +28,20 @@ class MetadataController(PackageController):
             return eval(getExtraProperty(package_info, 'metadata_keys'))
         return ()
 
+    def count_vocabulary_usage(self, vocabularies, context):
+        vocab_count = {}
+        for vocabulary in vocabularies:
+            vocab_count[vocabulary] = 0
+
+        packages = get_action('package_list')(context, ())
+        for package in packages:
+            package_info = get_action('package_show')(context, {'id': package})
+            package_vocabularies = eval(getExtraProperty(package_info, key))
+            for vocabulary in vocabularies:
+                if vocabulary in package_vocabularies:
+                    vocab_count[vocabulary] += 1
+                    
+        return vocab_count
         
     def show_metadata(self, id):
         log.info('Showing metadata for id: %s' % id)         
@@ -43,7 +57,13 @@ class MetadataController(PackageController):
 
         c.extra_metadata = {}
         for key in self.get_metadata_keys(package_info):
-            c.extra_metadata[key] = getExtraProperty(package_info, key)
+            if key == 'vocabularies':
+                vocabularies = eval(getExtraProperty(package_info, key))
+                vocab_count = self.count_vocabulary_usage(vocabularies, context)
+                for key, value in vocab_count.items():
+                    c.extra_metadata[key] = value
+            else:
+                c.extra_metadata[key] = getExtraProperty(package_info, key)
 
         #rendering using default template
         return render('metadata/read.html')
