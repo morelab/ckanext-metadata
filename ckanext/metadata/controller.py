@@ -62,7 +62,7 @@ class MetadataController(PackageController):
             if property.key == 'vocabularies':
                 vocabularies = eval(property.value)
                 vocab_count = self.count_vocabulary_usage(vocabularies, c.pkg.id, context)
-                c.extra_metadata[key] = str(vocab_count)
+                c.extra_metadata[property.key] = str(vocab_count)
             else:
                 c.extra_metadata[property.key] = property.value
 
