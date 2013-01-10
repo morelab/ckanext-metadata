@@ -12,4 +12,6 @@ Install plugin
 
 Install dependencies
 
+    pip install -e git+https://github.com/RDFLib/rdflib-postgresql.git#egg=rdflib_posgresql
+
     pip install -e git+https://github.com/memaldi/SWAnalyzer.git#egg=swanalyzer
