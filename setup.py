@@ -6,7 +6,7 @@ version = '0.1'
 setup(
 	name='ckanext-metadata',
 	version=version,
-	description="Metadata generator and visualization for ADAPTA",
+	description="SPARQL endpoint analyzer and metadata generator for CKAN",
 	long_description="""\
 	""",
 	classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
