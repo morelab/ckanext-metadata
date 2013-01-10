@@ -14,7 +14,7 @@ setup(
 	author='Unai Aguilera',
 	author_email='unai.aguilera@deusto.es',
 	url='http://www.morelab.deusto.es',
-	license='GPL',
+	license='AGPLv3',
 	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
 	namespace_packages=['ckanext', 'ckanext.metadata'],
 	include_package_data=True,
@@ -25,7 +25,6 @@ setup(
 	entry_points=\
 	"""
     [ckan.plugins]
-		# Add plugins here, eg
 		metadata=ckanext.metadata.plugin:MetadataExtension
 		
 	[ckan.celery_task]
