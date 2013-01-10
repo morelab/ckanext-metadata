@@ -14,17 +14,18 @@ setup(
 	author='Unai Aguilera',
 	author_email='unai.aguilera@deusto.es',
 	url='http://www.morelab.deusto.es',
-	license='AGPLv3',
+	license='AGPL',
 	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
 	namespace_packages=['ckanext', 'ckanext.metadata'],
 	include_package_data=True,
 	zip_safe=False,
 	install_requires=[
-		'celery==2.4.2'
+		'celery==2.4.2',
+		'requests',
 	],
 	entry_points=\
 	"""
-    [ckan.plugins]
+	[ckan.plugins]
 		metadata=ckanext.metadata.plugin:MetadataExtension
 		
 	[ckan.celery_task]
