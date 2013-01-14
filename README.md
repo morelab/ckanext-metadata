@@ -16,6 +16,6 @@ SPARQL endpoint analyzer and metadata generator for CKAN
 
     pip install -e git+https://github.com/memaldi/SWAnalyzer.git#egg=swanalyzer
     
-**Create new tables on CKAN database for calculated properties storage**
+**Initialize new tables on CKAN database**
 
     python ckanext/metadata/model/initDB.py
