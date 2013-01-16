@@ -1,7 +1,9 @@
 ckanext-metadata
 ================
 
-SPARQL endpoint analyzer and metadata generator for CKAN
+SPARQL endpoint analyzer and metadata generator for CKAN.
+
+Tested with CKAN 1.8.
 
  Installation
 --------------
@@ -24,6 +26,10 @@ SPARQL endpoint analyzer and metadata generator for CKAN
 
     python ckanext/metadata/model/initDB.py
     
+**Apply next patch to CKAN code for adding periodic task support to paster launcher**
+
+https://gist.github.com/4547407
+    
 **Celery task queue initialization**
 This plugin uses Celery (http://celeryproject.org/) for task queueing. 
 
@@ -33,4 +39,4 @@ First start the CKAN instance
     
 Next, start the Celery server with
 
-    paster celeryd
+    paster celeryd run beat
