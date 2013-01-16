@@ -19,3 +19,14 @@ SPARQL endpoint analyzer and metadata generator for CKAN
 **Initialize new tables on CKAN database**
 
     python ckanext/metadata/model/initDB.py
+    
+**Celery task queue initialization**
+This plugin uses Celery (http://celeryproject.org/) for task queueing. 
+
+First start the CKAN instance
+
+    paster serve development.ini
+    
+Next, start the Celery server with
+
+    paster celeryd
