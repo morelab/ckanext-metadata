@@ -173,8 +173,7 @@ def obtain_metadata(package_info):
 
     sparql_endpoints = []
     for resource in package_info['resources']:
-        if resource['resource_type'] == 'api'
-        and resource['format'].lower() == 'api/sparql':
+        if resource['resource_type'] == 'api' and resource['format'].lower() == 'api/sparql':
             sparql_endpoints.append(resource['url'])
 
     if len(sparql_endpoints) > 0:
