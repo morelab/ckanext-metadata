@@ -9,6 +9,10 @@ SPARQL endpoint analyzer and metadata generator for CKAN
 **Install plugin**
 
     python setup.py install
+    
+**Update CKAN development.ini file to load the plugin**
+
+    ckan.plugins = stats metadata
 
 **Install dependencies**
 
