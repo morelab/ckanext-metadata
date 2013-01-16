@@ -26,9 +26,12 @@ Tested with CKAN 1.8.
 
     python ckanext/metadata/model/initDB.py
     
-**Apply next patch to CKAN code for adding periodic task support to paster launcher**
+**Apply patch to CKAN code for adding periodic task support to paster launcher**
 
-https://gist.github.com/4547407
+Copy patch content from https://gist.github.com/4547407 to a file named *beat_support.patch*
+and execute next line on CKAN source directory
+
+    git apply beat_support.patch
     
 **Celery task queue initialization**
 This plugin uses Celery (http://celeryproject.org/) for task queueing. 
