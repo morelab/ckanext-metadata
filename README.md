@@ -10,7 +10,7 @@ Tested with CKAN 1.8.
 
 **Install plugin**
 
-    python setup.py develop
+    python setup.py install
     
 **Update CKAN development.ini file to load the plugin**
 

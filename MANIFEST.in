@@ -1,0 +1,4 @@
+recursive-include ckanext/metadata/theme/public/icons						*
+recursive-include ckanext/metadata/theme/templates/metadata					*
+recursive-include ckanext/metadata/theme/templates/package					*
+recursive-include ckanext/metadata/theme/templates/tasks					*
