@@ -23,6 +23,21 @@ Tested with CKAN 1.8.
 **Initialize new tables on CKAN database**
 
     python ckanext/metadata/model/initDB.py
+
+**Add plugin configuration variables to CKAN development.ini''
+
+Change the admin API with yours
+
+	[plugin:metadata]
+	#admin api key used for connection from celery
+	api_key = 5386a00d-d027-4233-8919-8c68e0ec1d04
+
+	#run every s seconds, for debugging purposes
+	#run_every = 30
+
+	#metadata analyzer task cron
+	cron_hour = 03
+	cron_minute = 00
     
 **Apply patch to CKAN code for adding periodic task support to paster launcher**
 
