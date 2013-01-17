@@ -35,9 +35,9 @@ class MetadataController(PackageController):
         for package in packages:
             package_info = get_action('package_show')(context, {'id': package})
             if not package_info['id'] == current_package_id:
-                package_vocabularies = eval(model.Session.query(Property).filter_by(package_id=c.pkg.id, key='vocabularies'))
-                for vocabulary in vocabularies:
-                    if vocabulary in package_vocabularies:
+                property_vocab = model.Session.query(Property).filter_by(package_id=package_info['id'], key='vocabularies').one()
+                for vocabulary in eval(property_vocab.value):
+                    if vocabulary in vocab_count:
                         vocab_count[vocabulary] += 1
 
         return vocab_count
