@@ -16,19 +16,18 @@ from pmanager import get_task_status_value
 from celery.signals import beat_init
 from swanalyzer.sparql_analyzer import SPARQLAnalyzer, check_sparql_endpoint
 
+import os
+import ConfigParser
 
-#CKAN site URL
-SITE_URL = 'http://127.0.0.1:5000/'
+#Configuration load
+config = ConfigParser.RawConfigParser()
+config.read(os.environ['CKAN_CONFIG'])
+
+SITE_URL = config.get('app:main', 'ckan.site_url')
 API_URL = urlparse.urljoin(SITE_URL, 'api/')
 
 #CKAN admin API key
 API_KEY = '5386a00d-d027-4233-8919-8c68e0ec1d04'
-
-# parameters for temporal database connection
-DB_USER = 'ckanuser'
-DB_PASS = 'pass'
-DB_HOST = 'localhost'
-DB_NAME = 'rdfstore'
 
 def get_tasks_status():
     tasks_status = {}
