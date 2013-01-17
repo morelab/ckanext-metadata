@@ -24,13 +24,13 @@ Tested with CKAN 1.8.
 
     python ckanext/metadata/model/initDB.py
 
-**Add plugin configuration variables to CKAN development.ini''
+**Add plugin configuration variables to CKAN development.ini**
 
-Change the admin API with yours
+Append this configuration snippet to the file. Do not forget to **change the admin API** key with yours.
 
 	[plugin:metadata]
 	#admin api key used for connection from celery
-	api_key = 5386a00d-d027-4233-8919-8c68e0ec1d04
+	api_key = 5386a00d-d027-4233-8919-8c68e0ec1d04 # change this API key
 
 	#run every s seconds, for debugging purposes
 	#run_every = 30
