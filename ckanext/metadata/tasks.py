@@ -124,7 +124,7 @@ def analyze_metadata(url):
     print 'Analyzing SPARQL endpoint on URL %s' % url
 
     if check_sparql_endpoint(url):
-        sparql_analyzer = SPARQLAnalyzer(url, 'turismo', 'user=ckanuser password=pass host=localhost dbname=rdfstore', None, False)
+        sparql_analyzer = SPARQLAnalyzer(url, 'turismo', 'swanalyzer.sqlite', store='SQLite', proxy=None, subprocess=False)
         sparql_analyzer.open()
 
         sparql_analyzer.load_graph()
