@@ -118,6 +118,19 @@ def updatePackageProperties(package_id, properties):
         print 'ckan failed to update package properties, status_code (%s), error %s' % (res.status_code, res.content)
         return False
 
+def update_vocab_count():
+    res = requests.post(
+        API_URL + '2/update/update_vocab_count', json.dumps({}),
+        headers = {'Authorization': API_KEY,
+                   'Content-Type': 'application/json'}
+    )
+
+    if res.status_code == 200:
+        return True
+    else:
+        print 'ckan failed to update vocab_counting, status_code (%s), error %s' % (res.status_code, res.content)
+        return False
+
 def analyze_metadata(url):
     results = {}
 
@@ -160,11 +173,18 @@ def analyze_metadata(url):
         results['inner_links'] = len(sparql_analyzer.get_inner_links())
 
         property_list = [str(p[0].encode('utf-8')) for p in properties]
-        results['vocabularies'] = str(sparql_analyzer.get_patterns(property_list))
+
+        vocab_count = {}
+        for vocabulary in sparql_analyzer.get_patterns(property_list):
+            vocab_count[vocabulary] = 0
+
+        results['vocabularies'] = str(vocab_count)
 
         sparql_analyzer.close()
     else:
         results['accesible'] = str(False)
+
+    print 'SPARQL endpoint analyzed'
 
     return results
 
@@ -195,7 +215,7 @@ def obtain_metadata(package_info):
 
         print 'Metadata task finished for package %s' % package_info['id']
 
-        time.sleep(5)
+        update_vocab_count()
 
         task_info = {
             'id': task_status['id'],

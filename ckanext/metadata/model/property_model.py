@@ -17,4 +17,7 @@ class Property(object):
         self.key = key
         self.value = value
 
+    def __repr__(self):
+    	return '<Property package_id: %s key: %s value: %s>' % (self.package_id, self.key, self.value)
+
 mapper(Property, property_table)

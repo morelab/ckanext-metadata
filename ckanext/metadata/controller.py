@@ -25,22 +25,6 @@ def get_task_status(context, id):
         return None
 
 class MetadataController(PackageController):
-
-    def count_vocabulary_usage(self, vocabularies, current_package_id, context):
-        vocab_count = {}
-        for vocabulary in vocabularies:
-            vocab_count[vocabulary] = 0
-
-        packages = get_action('package_list')(context, ())
-        for package in packages:
-            package_info = get_action('package_show')(context, {'id': package})
-            if not package_info['id'] == current_package_id:
-                property_vocab = model.Session.query(Property).filter_by(package_id=package_info['id'], key='vocabularies').one()
-                for vocabulary in eval(property_vocab.value):
-                    if vocabulary in vocab_count:
-                        vocab_count[vocabulary] += 1
-
-        return vocab_count
         
     def show_metadata(self, id):
         log.info('Showing metadata for id: %s' % id)         
@@ -59,12 +43,7 @@ class MetadataController(PackageController):
         properties = model.Session.query(Property).filter_by(package_id=c.pkg.id)
 
         for property in properties:
-            if property.key == 'vocabularies':
-                vocabularies = eval(property.value)
-                vocab_count = self.count_vocabulary_usage(vocabularies, c.pkg.id, context)
-                c.extra_metadata[property.key] = str(vocab_count)
-            else:
-                c.extra_metadata[property.key] = property.value
+            c.extra_metadata[property.key] = property.value
 
         #rendering using default template
         return render('metadata/read.html')
@@ -125,6 +104,32 @@ class ApiController(BaseApiController):
             if not key == 'package_id':
                 property = Property(request['package_id'], key, value)
                 model.Session.merge(property)
+
+        model.Session.commit()
+
+        return self._finish_ok({})
+
+    def update_vocabulary_count(self):
+        log.info('Updating vocabulary count')
+
+        vocab_count = {}
+
+        vocab_properties = model.Session.query(Property).filter_by(key='vocabularies').all()
+        for property in vocab_properties:
+            vocabularies = eval(property.value)
+            for vocabulary in vocabularies:
+                if vocabulary not in vocab_count:
+                    vocab_count[vocabulary] = 0
+                else:
+                    vocab_count[vocabulary] += 1
+
+        for property in vocab_properties:
+            package_vocabularies = eval(property.value)
+            for vocabulary in package_vocabularies:
+                if vocabulary in vocab_count:
+                    package_vocabularies[vocabulary] = vocab_count[vocabulary]
+
+            property.value = str(package_vocabularies)
 
         model.Session.commit()
 
