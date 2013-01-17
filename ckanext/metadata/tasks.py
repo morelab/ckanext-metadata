@@ -20,14 +20,26 @@ import os
 import ConfigParser
 
 #Configuration load
-config = ConfigParser.RawConfigParser()
+config = ConfigParser.ConfigParser()
 config.read(os.environ['CKAN_CONFIG'])
 
 SITE_URL = config.get('app:main', 'ckan.site_url')
 API_URL = urlparse.urljoin(SITE_URL, 'api/')
+API_KEY = config.get('plugin:metadata', 'api_key')
+CRON_HOUR = config.get('plugin:metadata', 'cron_hour')
+CRON_MINUTE = config.get('plugin:metadata', 'cron_minute')
 
-#CKAN admin API key
-API_KEY = '5386a00d-d027-4233-8919-8c68e0ec1d04'
+try:
+    RUN_EVERY = config.get('plugin:metadata', 'run_every')
+except ConfigParser.NoOptionError:
+    RUN_EVERY = None
+
+if RUN_EVERY is not None:
+    print 'Launching periodic tasks every %s seconds' % RUN_EVERY
+    periodicity = timedelta(seconds=int(RUN_EVERY))
+else:
+    print 'Launching periodic task at %s:%s' % (CRON_HOUR, CRON_MINUTE)
+    periodicity = crontab(hour=CRON_HOUR, minute=CRON_MINUTE)
 
 def get_tasks_status():
     tasks_status = {}
@@ -257,8 +269,7 @@ def get_package_info(package_name):
         print 'ckan failed to show package information, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
 
-#@periodic_task(run_every=crontab(hour=9, minute=35))
-@periodic_task(run_every=timedelta(seconds=30))
+@periodic_task(run_every=periodicity)
 def launch_metadata_calculation():
     print 'Launching metadata periodic task'
 
