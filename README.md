@@ -16,10 +16,6 @@ Tested with CKAN 1.8.
 
     ckan.plugins = stats metadata
 
-**Install dependencies**
-
-    pip install -e git+https://github.com/memaldi/SWAnalyzer.git#egg=swanalyzer
-    
 **Initialize new tables on CKAN database**
 
     python ckanext/metadata/model/initDB.py
