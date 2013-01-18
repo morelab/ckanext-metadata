@@ -22,7 +22,11 @@ setup(
 	install_requires=[
 		'celery==2.4.2',
 		'requests',
+		'swanalyzer'
 	],
+	dependency_links=[
+    	"https://github.com/memaldi/SWAnalyzer/tarball/master#egg=swanalyzer",
+    ],
 	entry_points=\
 	"""
 	[ckan.plugins]
