@@ -34,6 +34,10 @@ Append this configuration snippet to the file. Do not forget to **change the adm
 	#metadata analyzer task cron
 	cron_hour = 03
 	cron_minute = 00
+
+Also check that CKAN site URL is configured. For example
+
+    ckan.site_url = http://127.0.0.1:5000	
     
 **Apply patch to CKAN code for adding periodic task support to paster launcher**
 
