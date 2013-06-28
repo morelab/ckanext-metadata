@@ -20,9 +20,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'celery==2.4.2',
+        'celery',
         'requests',
-        'swanalyzer'
+        'swanalyzer',
     ],
     dependency_links=[
         "https://github.com/memaldi/SWAnalyzer/tarball/master#egg=swanalyzer",
