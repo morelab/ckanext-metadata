@@ -23,6 +23,7 @@ import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read(os.environ['CKAN_CONFIG'])
 
+DB_URL = config.get('app:main',' sqlalchemy.url')
 SITE_URL = config.get('app:main', 'ckan.site_url')
 API_URL = urlparse.urljoin(SITE_URL, 'api/')
 API_KEY = config.get('plugin:metadata', 'api_key')
@@ -148,7 +149,13 @@ def analyze_metadata(url):
     print 'Analyzing SPARQL endpoint on URL %s' % url
 
     if check_sparql_endpoint(url):
-        sparql_analyzer = SPARQLAnalyzer(url, 'turismo', 'swanalyzer.sqlite', store='SQLite', proxy=None, subprocess=False)
+		
+		db_name = DB_URL[DB_URL.rfind('/') + 1:]
+		user = DB_URL[DB_URL.rfind('//') + 2:DB_URL.rfind(':')]
+		password = DB_URL[DB_URL.rfind(':') + 1:DB_URL.rfind('@')]
+		host = DB_URL[DB_URL.rfind('@') + 1:DB_URL.rfind('/')]
+		
+        sparql_analyzer = SPARQLAnalyzer(url, 'rdfstore', 'user=%s password=%s host=%s dbname=%s' % (user, password, host, db_name), store='PostgreSQL', proxy=None, subprocess=False)
         sparql_analyzer.open()
 
         sparql_analyzer.load_graph()
