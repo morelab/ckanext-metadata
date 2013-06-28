@@ -149,12 +149,12 @@ def analyze_metadata(url):
     print 'Analyzing SPARQL endpoint on URL %s' % url
 
     if check_sparql_endpoint(url):
-		
-		db_name = DB_URL[DB_URL.rfind('/') + 1:]
-		user = DB_URL[DB_URL.rfind('//') + 2:DB_URL.rfind(':')]
-		password = DB_URL[DB_URL.rfind(':') + 1:DB_URL.rfind('@')]
-		host = DB_URL[DB_URL.rfind('@') + 1:DB_URL.rfind('/')]
-		
+        
+        db_name = DB_URL[DB_URL.rfind('/') + 1:]
+        user = DB_URL[DB_URL.rfind('//') + 2:DB_URL.rfind(':')]
+        password = DB_URL[DB_URL.rfind(':') + 1:DB_URL.rfind('@')]
+        host = DB_URL[DB_URL.rfind('@') + 1:DB_URL.rfind('/')]
+        
         sparql_analyzer = SPARQLAnalyzer(url, 'rdfstore', 'user=%s password=%s host=%s dbname=%s' % (user, password, host, db_name), store='PostgreSQL', proxy=None, subprocess=False)
         sparql_analyzer.open()
 
