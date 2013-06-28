@@ -20,6 +20,8 @@ Tested with CKAN 1.8
 
     python ckanext/metadata/model/initDB.py
     
+**Create PostgreSQL store for SWAnalyzer (set database user)**
+    
     sudo -u postgres createdb -O [user] rdfstore
 
 **Add plugin configuration variables to CKAN development.ini**
