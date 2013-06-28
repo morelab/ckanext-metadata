@@ -82,6 +82,7 @@ def delete_task_status(task_id):
         return True
     else:
         print 'ckan failed to update task_status, status_code (%s), error %s' % (res.status_code, res.content)
+	
         return False
 
 def get_task_status(package_id):
@@ -94,7 +95,9 @@ def get_task_status(package_id):
     if res.status_code == 200:
         return json.loads(res.content)['result']
     else:
-        #print 'ckan failed to get task_status, status_code (%s), error %s' % (res.status_code, res.content)
+	data = json.loads(res.content)
+	if not data['error']['message'] == "Not found":
+                print 'ckan failed to get task_status, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
 
 def updatePackage(package_info):
