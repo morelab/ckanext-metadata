@@ -23,7 +23,7 @@ import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read(os.environ['CKAN_CONFIG'])
 
-DB_URL = config.get('app:main',' sqlalchemy.url')
+DB_URL = config.get('app:main', 'sqlalchemy.url')
 SITE_URL = config.get('app:main', 'ckan.site_url')
 API_URL = urlparse.urljoin(SITE_URL, 'api/')
 API_KEY = config.get('plugin:metadata', 'api_key')
