@@ -94,7 +94,7 @@ def get_task_status(package_id):
     if res.status_code == 200:
         return json.loads(res.content)['result']
     else:
-        print 'ckan failed to get task_status, status_code (%s), error %s' % (res.status_code, res.content)
+        #print 'ckan failed to get task_status, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
 
 def updatePackage(package_info):
