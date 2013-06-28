@@ -3,7 +3,7 @@ ckanext-metadata
 
 SPARQL endpoint analyzer and metadata generator for CKAN.
 
-Tested with CKAN 1.8.
+Tested with CKAN 1.8
 
  Installation
 --------------
@@ -16,7 +16,7 @@ Tested with CKAN 1.8.
 
     ckan.plugins = stats metadata
 
-**Initialize new tables on CKAN database**
+**Initialize new tables on CKAN database (Change user & pass)**
 
     python ckanext/metadata/model/initDB.py
 
@@ -26,7 +26,7 @@ Append this configuration snippet to the file. Do not forget to **change the adm
 
 	[plugin:metadata]
 	#admin api key used for connection from celery
-	api_key = 5386a00d-d027-4233-8919-8c68e0ec1d04 # change this API key
+	api_key = xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # change this API key
 
 	#run every s seconds, for debugging purposes
 	#run_every = 30
