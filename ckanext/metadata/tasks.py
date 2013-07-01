@@ -12,7 +12,6 @@ import urlparse
 import requests
 
 from datetime import timedelta, datetime
-from pmanager import get_task_status_value
 from celery.signals import beat_init
 from swanalyzer.sparql_analyzer import SPARQLAnalyzer, check_sparql_endpoint
 
@@ -41,6 +40,14 @@ if RUN_EVERY is not None:
 else:
     print 'Launching periodic task at %s:%s' % (CRON_HOUR, CRON_MINUTE)
     periodicity = crontab(hour=CRON_HOUR, minute=CRON_MINUTE)
+    
+def get_task_status_value(task_status):
+    if task_status[1] is None:
+        return 'launched'
+    elif task_status[1] is 'error':
+        return 'error'
+    else:
+        return 'finished'
 
 def get_tasks_status():
     tasks_status = {}
@@ -56,7 +63,7 @@ def get_tasks_status():
             tasks_status[package_info['name']] = (task_status['id'], task_status_value)
 
     return tasks_status
-
+    
 def update_task_status(task_info):
     print "Updating task status for entity_id %s" % task_info['entity_id']
     res = requests.post(

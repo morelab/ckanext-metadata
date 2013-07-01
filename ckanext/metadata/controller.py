@@ -6,7 +6,7 @@ from ckan.controllers.package import PackageController
 from ckan.controllers.api import ApiController as BaseApiController 
 from ckan.lib.base import BaseController, abort
 from ckan.logic import get_action, NotFound
-from pmanager import updatePackage, get_task_status_value
+from tasks import get_task_status_value
 
 from ckan.model.types import make_uuid
 
