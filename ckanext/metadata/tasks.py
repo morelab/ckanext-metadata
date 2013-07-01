@@ -14,6 +14,7 @@ import requests
 from datetime import timedelta, datetime
 from celery.signals import beat_init
 from swanalyzer.sparql_analyzer import SPARQLAnalyzer, check_sparql_endpoint
+from requests.exceptions import ConnectionError
 
 import os
 import ConfigParser
@@ -288,7 +289,7 @@ def get_package_info(package_name):
         
 def get_status_show():
     res = requests.post(
-        API_URL + 'action/status_show', {}),
+        API_URL + 'action/status_show', json.dumps({}),
         headers = {'Authorization': API_KEY,
                    'Content-Type': 'application/json'}
     )
@@ -298,28 +299,7 @@ def get_status_show():
     else:
         print 'ckan failed to get status information, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
-
-@periodic_task(run_every=periodicity)
-def launch_metadata_calculation():
-	print 'Status info', get_status_show()
-	
-	print 'Launching metadata periodic task'
-
-	package_list = get_package_list()
-	for package_name in package_list:
-		package_info = get_package_info(package_name)
-
-		task_status = get_task_status(package_info['id'])
-		if len(task_status) == 0:
-			task_status_value = None
-		else:
-			task_status_value = get_task_status_value(eval(task_status['value']))
-
-		if task_status_value is None or task_status_value not in ('launched'):
-			obtain_metadata(package_info)
-		else:
-			print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
-
+        
 def clear_pending_tasks():
     print 'Clearing pending tasks'
 
@@ -330,4 +310,31 @@ def clear_pending_tasks():
             print 'Deleting task %s with status %s' % (task_id, status)
             delete_task_status(task_id)
 
-clear_pending_tasks()
+
+@periodic_task(run_every=periodicity)
+def launch_metadata_calculation():  
+    try:
+        status_info = get_status_show()
+        ckan_running = True
+    except Exception:
+        ckan_running = False
+        
+    if ckan_running:        
+        print 'Launching metadata periodic task'
+
+        package_list = get_package_list()
+        for package_name in package_list:
+            package_info = get_package_info(package_name)
+
+            task_status = get_task_status(package_info['id'])
+            if len(task_status) == 0:
+                task_status_value = None
+            else:
+                task_status_value = get_task_status_value(eval(task_status['value']))
+
+            if task_status_value is None or task_status_value not in ('launched'):
+                obtain_metadata(package_info)
+            else:
+                print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
+    else:
+        print 'CKAN server not running'
