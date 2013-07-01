@@ -39,6 +39,9 @@ class MetadataController(PackageController):
         c.metadata_task_status = get_task_status_value(package_info['id'])
 
         c.extra_metadata = {}
+        
+        if 'clear' in request.params:
+            properties = model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
 
         properties = model.Session.query(Property).filter_by(package_id=c.pkg.id)
 

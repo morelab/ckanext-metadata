@@ -7,6 +7,17 @@
 
   <div id="dataset" class="dataset">
     <h3>Metadata Task Status: <b>${c.metadata_task_status}</b></h3>
+    
+    <form 
+      id="clear-data" 
+      action="/dataset/metadata/${c.id}" 
+      method="post"
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+      <button class="btn btn-primary" type="submit" id="button">Clear Metadata</button>
+      <input type="hidden" name="clear" value="submitted" />
+    </form>
 
     <!-- Extra Metadata Section -->
     <h3>Extra Information</h3>
