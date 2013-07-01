@@ -67,13 +67,13 @@ class AdminController(BaseController):
 
         return tasks_status
 
-    def clear_finished_tasks(self, context):
+    def clear_finished_tasks(self, context, all_tasks=False):
         log.info('Clearing finished tasks')
 
         task_status = self.get_tasks_status(context)
 
         for _, (task_id, status) in task_status.items():
-            if status in ('error', 'finished'):
+            if all_tasks or status in ('error', 'finished'):
                 log.info('Deleting task %s with status %s' % (task_id, status))
                 get_action('task_status_delete')(context, {'id': task_id})
 
@@ -84,6 +84,8 @@ class AdminController(BaseController):
 
         if 'clear' in request.params:
             self.clear_finished_tasks(context)
+        if 'clear_all' in request.params:
+            self.clear_finished_tasks(context, all_tasks=True)
 
         c.task_status = self.get_tasks_status(context)        
 
