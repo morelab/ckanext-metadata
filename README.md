@@ -54,10 +54,10 @@ and execute next line on CKAN source directory
 **Celery task queue initialization**
 This plugin uses Celery (http://celeryproject.org/) for task queueing. 
 
-First start the CKAN instance
+Start the CKAN instance
 
     paster serve development.ini
     
-Next, start the Celery server with
+Start the Celery server
 
     paster celeryd run beat
