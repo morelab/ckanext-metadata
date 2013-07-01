@@ -285,25 +285,40 @@ def get_package_info(package_name):
     else:
         print 'ckan failed to show package information, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
+        
+def get_status_show():
+    res = requests.post(
+        API_URL + 'action/status_show', {}),
+        headers = {'Authorization': API_KEY,
+                   'Content-Type': 'application/json'}
+    )
+
+    if res.status_code == 200:
+        return json.loads(res.content)['result']
+    else:
+        print 'ckan failed to get status information, status_code (%s), error %s' % (res.status_code, res.content)
+        return {}
 
 @periodic_task(run_every=periodicity)
 def launch_metadata_calculation():
-    print 'Launching metadata periodic task'
+	print 'Status info', get_status_show()
+	
+	print 'Launching metadata periodic task'
 
-    package_list = get_package_list()
-    for package_name in package_list:
-        package_info = get_package_info(package_name)
+	package_list = get_package_list()
+	for package_name in package_list:
+		package_info = get_package_info(package_name)
 
-        task_status = get_task_status(package_info['id'])
-        if len(task_status) == 0:
-            task_status_value = None
-        else:
-            task_status_value = get_task_status_value(eval(task_status['value']))
+		task_status = get_task_status(package_info['id'])
+		if len(task_status) == 0:
+			task_status_value = None
+		else:
+			task_status_value = get_task_status_value(eval(task_status['value']))
 
-        if task_status_value is None or task_status_value not in ('launched'):
-            obtain_metadata(package_info)
-        else:
-            print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
+		if task_status_value is None or task_status_value not in ('launched'):
+			obtain_metadata(package_info)
+		else:
+			print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
 
 def clear_pending_tasks():
     print 'Clearing pending tasks'
