@@ -2,7 +2,7 @@ import property_model
 from sqlalchemy import create_engine
 
 USER = 'ckanuser'
-PASS = '4d4pt4'
+PASS = 'pass'
 
 print 'Creating table for metadata property storage'
 engine = create_engine('postgresql://%s:%s@localhost/ckantest' % (USER, PASS), echo=True)
