@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:void="http://rdfs.org/ns/void#"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xmlns:wv="http://vocab.org/waiver/terms/norms"
+  xmlns:sd="http://www.w3.org/ns/sparql-service-description#"
+>
+
+<void:Dataset rdf:about="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}">
+    <owl:sameAs rdf:resource="urn:uuid:${c.pkg_dict['id']}"/>
+    <foaf:homepage rdf:resource="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}"/>
+    <rdfs:label>${c.pkg_dict['name']}</rdfs:label>
+    
+    <!-- basic information section -->
+    <dcterms:title>${c.pkg_dict['title']}</dcterms:title>
+    <dcterms:description>${c.pkg_dict['notes']}</dcterms:description>
+    
+    <dcterms:creator  py:if="c.pkg_dict.get('author', None)">
+      <rdf:Description>
+        <foaf:name>${ c.pkg_dict['author'] }</foaf:name>
+        <foaf:mbox  py:if="c.pkg_dict.get('maintainer_email', None)" rdf:resource="mailto:${c.pkg_dict['author_email']}"/>
+      </rdf:Description>
+    </dcterms:creator>
+    
+    <!-- <dcterms:publisher  py:if="c.pkg_dict.get('author', None)">
+      <rdf:Description>
+        <foaf:name>${ c.pkg_dict['author'] }</foaf:name>
+        <foaf:mbox  py:if="c.pkg_dict.get('maintainer_email', None)" rdf:resource="mailto:${c.pkg_dict['author_email']}"/>
+      </rdf:Description>
+    </dcterms:publisher> -->
+    
+    <!-- <dcterms:date rdf:datatype="&xsd;dateTime">2009-09-30T11:01:59Z</dcterms:date> -->
+    <!-- <dcterms:created rdf:datatype="&xsd;dateTime">2009-09-30T11:01:59Z</dcterms:created> -->
+    <!-- <dcterms:issued rdf:datatype="&xsd;dateTime">2009-09-30T11:01:59Z</dcterms:issued> -->
+    <!-- <dcterms:modified rdf:datatype="&xsd;dateTime">2009-09-30T11:01:59Z</dcterms:modified> -->
+    
+    <dcterms:contributor py:if="c.pkg_dict.get('maintainer', None)">
+      <rdf:Description>
+        <foaf:name>${ c.pkg_dict['maintainer'] }</foaf:name>
+        <foaf:mbox  py:if="c.pkg_dict.get('maintainer_email', None)" rdf:resource="mailto:${c.pkg_dict['maintainer_email']}"/>
+      </rdf:Description>
+    </dcterms:contributor>
+    
+    <!-- end of basic information section -->
+    
+    <!-- license section -->
+    <dct:rights py:if="c.pkg_dict.get('license_url', None)" rdf:resource="${c.pkg_dict['license_url']}"/>
+    <!-- end of license section -->
+    
+    <!-- extra information section -->
+    <py:for each="extra_dict in c.pkg_dict.get('extras',None)">
+        <dcterms:relation>
+          <rdf:Description>
+            <rdfs:label>${extra_dict.get('key','')}</rdfs:label>
+            <rdf:value>${extra_dict.get('value','')}</rdf:value>
+          </rdf:Description>
+        </dcterms:relation>
+    </py:for>
+    <!-- end of extra information section -->
+    
+</void:Dataset>
+
+</rdf:RDF>
+
