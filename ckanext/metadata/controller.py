@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*- 
 
-from ckan.lib.base import render, c, model, config, request
+from ckan.lib.base import render, c, model, config, request, response
 from logging import getLogger
 from ckan.controllers.package import PackageController
 from ckan.controllers.api import ApiController as BaseApiController 
@@ -50,6 +50,25 @@ class MetadataController(PackageController):
 
         #rendering using default template
         return render('metadata/read.html')
+        
+    def get_void_desc(self, id):
+        log.info('Dowloading VOID description for package: %s' % id)
+
+        # using default functionality
+        self.read(id)
+
+        #fill template
+        filename = 'void.rdf'
+        data = 'Hello world!'
+        
+        response.status_int = 200
+        response.headers['Content-Type'] = 'application/octet-stream'
+        response.headers['Content-Disposition'] = 'attachment; filename="%s"' % filename
+        response.headers['Content-Length'] = len(data)
+        response.headers['Cache-Control'] = 'no-cache, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+
+        return data
 
 class AdminController(BaseController):
 

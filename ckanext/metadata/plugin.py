@@ -65,6 +65,10 @@ class MetadataExtension(SingletonPlugin):
         map.connect('/dataset/metadata/{id}',
             controller='ckanext.metadata.controller:MetadataController',
             action='show_metadata')
+            
+        map.connect('/dataset/metadata/{id}/void',
+            controller='ckanext.metadata.controller:MetadataController',
+            action='get_void_desc')
 
         map.connect('/ckan-admin/metadata-tasks',
             controller='ckanext.metadata.controller:AdminController',
