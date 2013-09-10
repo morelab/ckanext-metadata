@@ -62,7 +62,13 @@
     <!-- end of technical feature section -->
     
     <!-- access metadata section -->
-    <!-- <void:void:sparqlEndpoint rdf:resource="http://dbpedia.org/sparql" /> -->
+    <py:if test="c.pkg_dict['resources']">
+        <py:for each="resource in c.pkg_dict['resources']">
+            <py:if test="resource['resource_type'] == 'api' and resource['format'].lower() == 'api/sparql'">
+    <void:sparqlEndpoint rdf:resource="${resource['url']}" />
+            </py:if>
+        </py:for>
+    </py:if>
     
     <!-- <void:dataDump rdf:resource="http://data.nytimes.com/people.rdf" /> -->
     <!-- <void:dataDump rdf:resource="http://data.nytimes.com/organizations.rdf" /> -->
@@ -71,7 +77,7 @@
     
     <!-- structural metadata section -->
     <py:for each="vocabulary in eval(c.extra_metadata['vocabularies']).keys()">
-        <void:vocabulary rdf:resource="${vocabulary}" />
+    <void:vocabulary rdf:resource="${vocabulary}" />
     </py:for>
     
     <void:triples py:if="c.extra_metadata.get('triples', None)">${c.extra_metadata.get('triples')}</void:triples>
