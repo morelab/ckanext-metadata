@@ -7,6 +7,7 @@ from ckan.controllers.api import ApiController as BaseApiController
 from ckan.lib.base import BaseController, abort
 from ckan.logic import get_action, NotFound
 from tasks import get_task_status_value
+from genshi.template import MarkupTemplate
 
 from ckan.model.types import make_uuid
 
@@ -52,23 +53,29 @@ class MetadataController(PackageController):
         return render('metadata/read.html')
         
     def get_void_desc(self, id):
-        log.info('Dowloading VOID description for package: %s' % id)
+        log.info('Generating VOID description for package: %s' % id)
 
         # using default functionality
-        self.read(id)
+        self.read(id, 'rdf')
 
-        #fill template
-        filename = 'void.rdf'
-        data = 'Hello world!'
+        #check if metadada info exists and add it otherwise
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author}
+        package_info = get_action('package_show')(context, {'id': c.pkg.id})
+
+        c.metadata_task_status = get_task_status_value(package_info['id'])
+
+        c.extra_metadata = {}
         
-        response.status_int = 200
-        response.headers['Content-Type'] = 'application/octet-stream'
-        response.headers['Content-Disposition'] = 'attachment; filename="%s"' % filename
-        response.headers['Content-Length'] = len(data)
-        response.headers['Cache-Control'] = 'no-cache, must-revalidate'
-        response.headers['Pragma'] = 'no-cache'
+        if 'clear' in request.params:
+            properties = model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
 
-        return data
+        properties = model.Session.query(Property).filter_by(package_id=c.pkg.id)
+
+        for property in properties:
+            c.extra_metadata[property.key] = property.value
+
+        #rendering using void template
+        return render('package/void.rdf', loader_class=MarkupTemplate)
 
 class AdminController(BaseController):
 
