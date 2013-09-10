@@ -10,6 +10,7 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
   xmlns:wv="http://vocab.org/waiver/terms/norms"
   xmlns:sd="http://www.w3.org/ns/sparql-service-description#"
+  xmlns:adapta="http://www.morelab.deusto.es/ontologies/adapta-metadata#"
 >
 
 <void:Dataset rdf:about="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}">
@@ -87,6 +88,19 @@
     <void:distinctSubjects py:if="c.extra_metadata.get('subjects', None)">${c.extra_metadata.get('subjects')}</void:distinctSubjects>
     <void:distinctObjects py:if="c.extra_metadata.get('objects', None)">${c.extra_metadata.get('objects')}</void:distinctObjects>
     <!-- end of structural metadata section -->
+    
+    <!-- adapta extension section -->
+    
+    <adapta:accesible py:if="c.extra_metadata.get('accesible', None)">${c.extra_metadata.get('accesible').lower()}</adapta:accesible>
+    
+    <adapta:instances py:if="c.extra_metadata.get('instances', None)">${c.extra_metadata.get('instances')}</adapta:instances>
+    
+    <adapta:links py:if="c.extra_metadata.get('all_links', None)">${c.extra_metadata.get('all_links')}</adapta:links>
+    <adapta:outgoing py:if="c.extra_metadata.get('outgoing_links', None)">${c.extra_metadata.get('outgoing_links')}</adapta:outgoing>
+    <adapta:ingoing py:if="c.extra_metadata.get('ingoing_links', None)">${c.extra_metadata.get('ingoing_links')}</adapta:ingoing>
+    <adapta:inner py:if="c.extra_metadata.get('inner_links', None)">${c.extra_metadata.get('inner_links')}</adapta:inner>
+    
+    <!-- end of adapta extension section -->
     
     <!-- extra information section -->
     <py:for each="extra_dict in c.pkg_dict.get('extras', None)">
