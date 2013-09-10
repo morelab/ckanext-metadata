@@ -89,7 +89,7 @@
     <!-- end of structural metadata section -->
     
     <!-- extra information section -->
-    <py:for each="extra_dict in c.pkg_dict.get('extras',None)">
+    <py:for each="extra_dict in c.pkg_dict.get('extras', None)">
         <dcterms:relation>
           <rdf:Description>
             <rdfs:label>${extra_dict.get('key','')}</rdfs:label>
