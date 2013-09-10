@@ -22,7 +22,7 @@
     
     <dcterms:creator  py:if="c.pkg_dict.get('author', None)">
       <rdf:Description>
-        <foaf:name>${ c.pkg_dict['author'] }</foaf:name>
+        <foaf:name>${c.pkg_dict['author']}</foaf:name>
         <foaf:mbox  py:if="c.pkg_dict.get('maintainer_email', None)" rdf:resource="mailto:${c.pkg_dict['author_email']}"/>
       </rdf:Description>
     </dcterms:creator>
@@ -41,7 +41,7 @@
     
     <dcterms:contributor py:if="c.pkg_dict.get('maintainer', None)">
       <rdf:Description>
-        <foaf:name>${ c.pkg_dict['maintainer'] }</foaf:name>
+        <foaf:name>${c.pkg_dict['maintainer']}</foaf:name>
         <foaf:mbox  py:if="c.pkg_dict.get('maintainer_email', None)" rdf:resource="mailto:${c.pkg_dict['maintainer_email']}"/>
       </rdf:Description>
     </dcterms:contributor>
