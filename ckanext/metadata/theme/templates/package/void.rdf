@@ -53,6 +53,34 @@
     <dcterms:rights py:if="c.pkg_dict.get('license_url', None)" rdf:resource="${c.pkg_dict['license_url']}"/>
     <!-- end of license section -->
     
+    <!-- subjects section -->
+    <!-- <dc:subject rdf:resource="http://dbpedia.org/resource/Computer_science" /> -->
+    <!-- end of subjects section-->
+    
+    <!-- technical features section -->
+    <!-- <void:feature rdf:resource="http://www.w3.org/ns/formats/RDF_XML" /> -->
+    <!-- end of technical feature section -->
+    
+    <!-- access metadata section -->
+    <!-- <void:void:sparqlEndpoint rdf:resource="http://dbpedia.org/sparql" /> -->
+    
+    <!-- <void:dataDump rdf:resource="http://data.nytimes.com/people.rdf" /> -->
+    <!-- <void:dataDump rdf:resource="http://data.nytimes.com/organizations.rdf" /> -->
+    
+    <!-- end of acess metadata section -->
+    
+    <!-- structural metadata section -->
+    <void:vocabulary rdf:resource="http://xmlns.com/foaf/0.1/" />
+    
+    <void:triples>100000</void:triples>
+    <void:entities>11111</void:entities>
+    <void:classes>111111</void:classes>
+    <void:properties>11111</void:properties>
+    <void:distinctSubjects>11111</void:distinctSubjects>
+    <void:distinctObjects>11111</void:distinctObjects>
+    
+    <!-- end of structural metadata section -->
+    
     <!-- extra information section -->
     <py:for each="extra_dict in c.pkg_dict.get('extras',None)">
         <dcterms:relation>
