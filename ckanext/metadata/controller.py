@@ -32,8 +32,8 @@ class MetadataController(PackageController):
 
         extra_metadata = {}
         for property in properties:
-            extra_metadata[property.key] = property.value
-        
+            extra_metadata[property.key] = eval(property.value)
+                    
         return extra_metadata
         
     def show_metadata(self, id):

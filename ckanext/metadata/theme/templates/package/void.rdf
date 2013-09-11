@@ -77,21 +77,21 @@
     <!-- end of acess metadata section -->
     
     <!-- structural metadata section -->
-    <py:for each="vocabulary in eval(c.extra_metadata['vocabularies']).keys()">
+    <py:for each="vocabulary in c.extra_metadata['vocabularies'].keys()">
     <void:vocabulary rdf:resource="${vocabulary}" />
     </py:for>
     
     <void:triples py:if="c.extra_metadata.get('triples', None)">${c.extra_metadata.get('triples')}</void:triples>
     <void:entities py:if="c.extra_metadata.get('entities', None)">${c.extra_metadata.get('entities')}</void:entities>
-    <void:classes py:if="c.extra_metadata.get('classes', None)">${len(eval(c.extra_metadata.get('classes')))}</void:classes>
-    <void:properties py:if="c.extra_metadata.get('properties', None)">${len(eval(c.extra_metadata.get('properties')))}</void:properties>
+    <void:classes py:if="c.extra_metadata.get('classes', None)">${len(c.extra_metadata.get('classes'))}</void:classes>
+    <void:properties py:if="c.extra_metadata.get('properties', None)">${len(c.extra_metadata.get('properties'))}</void:properties>
     <void:distinctSubjects py:if="c.extra_metadata.get('subjects', None)">${c.extra_metadata.get('subjects')}</void:distinctSubjects>
     <void:distinctObjects py:if="c.extra_metadata.get('objects', None)">${c.extra_metadata.get('objects')}</void:distinctObjects>
     <!-- end of structural metadata section -->
     
     <!-- adapta extension section -->
     
-    <adapta:accesible py:if="c.extra_metadata.get('accesible', None)">${c.extra_metadata.get('accesible').lower()}</adapta:accesible>
+    <adapta:accesible py:if="c.extra_metadata.get('accesible', None)">${str(c.extra_metadata.get('accesible')).lower()}</adapta:accesible>
     
     <adapta:instances py:if="c.extra_metadata.get('instances', None)">${c.extra_metadata.get('instances')}</adapta:instances>
     
