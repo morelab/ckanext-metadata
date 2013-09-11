@@ -176,8 +176,8 @@ def analyze_metadata(url):
 
         results['accesible'] = str(True)
 
-        results['classes'] = len(sparql_analyzer.get_classes())
-        results['properties'] = len(sparql_analyzer.get_properties())
+        results['classes'] = str(sparql_analyzer.get_all_classes_instances())
+        results['properties'] = str(sparql_analyzer.get_all_predicate_triples())
         results['subjects'] = len(sparql_analyzer.get_subjects())
         results['objects'] = len(sparql_analyzer.get_objects())
         results['instances'] = len(sparql_analyzer.get_all_links())

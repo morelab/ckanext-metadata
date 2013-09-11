@@ -26,6 +26,15 @@ def get_task_status(context, id):
         return None
 
 class MetadataController(PackageController):
+    
+    def get_extra_metadata(self, id):
+        properties = model.Session.query(Property).filter_by(package_id=id)
+
+        extra_metadata = {}
+        for property in properties:
+            extra_metadata[property.key] = property.value
+        
+        return extra_metadata
         
     def show_metadata(self, id):
         log.info('Showing metadata for id: %s' % id)         
@@ -38,18 +47,13 @@ class MetadataController(PackageController):
         package_info = get_action('package_show')(context, {'id': c.pkg.id})
 
         c.metadata_task_status = get_task_status_value(package_info['id'])
-
-        c.extra_metadata = {}
         
         if 'clear' in request.params:
             print 'Clearing metadata for package %s' % c.pkg.id
             properties = model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
             model.Session.commit()
 
-        properties = model.Session.query(Property).filter_by(package_id=c.pkg.id)
-
-        for property in properties:
-            c.extra_metadata[property.key] = property.value
+        c.extra_metadata = self.get_extra_metadata(c.pkg.id)
 
         #rendering using default template
         return render('metadata/read.html')
@@ -65,16 +69,11 @@ class MetadataController(PackageController):
         package_info = get_action('package_show')(context, {'id': c.pkg.id})
 
         c.metadata_task_status = get_task_status_value(package_info['id'])
-
-        c.extra_metadata = {}
         
         if 'clear' in request.params:
             properties = model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
 
-        properties = model.Session.query(Property).filter_by(package_id=c.pkg.id)
-
-        for property in properties:
-            c.extra_metadata[property.key] = property.value
+        c.extra_metadata = self.get_extra_metadata(c.pkg.id)
 
         #rendering using void template
         return render('package/void.rdf', loader_class=MarkupTemplate)
