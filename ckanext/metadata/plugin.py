@@ -66,7 +66,7 @@ class MetadataExtension(SingletonPlugin):
             controller='ckanext.metadata.controller:MetadataController',
             action='show_metadata')
             
-        map.connect('/dataset/metadata/{id}/void',
+        map.connect('/dataset/metadata/{id}/void.rdf',
             controller='ckanext.metadata.controller:MetadataController',
             action='get_void_desc')
 
