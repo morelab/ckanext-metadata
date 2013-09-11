@@ -286,8 +286,8 @@ def get_status_show():
         print 'ckan failed to get status information, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
         
-def clear_pending_tasks():
-    print 'Clearing pending tasks'
+def clear_broken_status_tasks():
+    print 'Clearing broken status tasks'
 
     tasks_status = get_tasks_status()
 
@@ -305,7 +305,9 @@ def launch_metadata_calculation():
     except Exception:
         ckan_running = False
         
-    if ckan_running:        
+    if ckan_running:  
+        clear_broken_status_tasks()
+          
         print 'Launching metadata periodic task'
 
         package_list = get_package_list()
