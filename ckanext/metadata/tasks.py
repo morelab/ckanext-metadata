@@ -176,38 +176,21 @@ def analyze_metadata(url):
 
         results['accesible'] = str(True)
 
-        properties = sparql_analyzer.get_properties()
-
         results['classes'] = len(sparql_analyzer.get_classes())
-        results['properties'] = len(properties)
+        results['properties'] = len(sparql_analyzer.get_properties())
         results['subjects'] = len(sparql_analyzer.get_subjects())
         results['objects'] = len(sparql_analyzer.get_objects())
         results['instances'] = len(sparql_analyzer.get_all_links())
         results['entities'] = len(sparql_analyzer.get_entities())
-        # results['linksets'] = sparql_analyzer.get_linksets()
-
-        # class_dict = {}
-        # for c in sparql_analyzer.get_classes():
-        #     c = c[0]
-        #     class_dict[c] = len(sparql_analyzer.get_class_instances(c))
-        # results['class_instances'] = str(class_dict)
-
-        # property_dict = {}
-        # for p in sparql_analyzer.get_properties():
-        #     p = p[0]
-        #     property_dict[p] = len(sparql_analyzer.get_property_count(p))
-        # results['property_count'] = str(property_dict)
 
         results['triples'] = len(sparql_analyzer.get_triples())
         results['all_links'] = len(sparql_analyzer.get_all_links())
-        results['ingoing_links'] = len(sparql_analyzer.get_inner_links())
-        results['outgoing_links'] = len(sparql_analyzer.get_inner_links())
+        results['ingoing_links'] = len(sparql_analyzer.get_ingoing_links())
+        results['outgoing_links'] = len(sparql_analyzer.get_outgoing_links())
         results['inner_links'] = len(sparql_analyzer.get_inner_links())
 
-        property_list = [str(p[0].encode('utf-8')) for p in properties]
-
         vocab_count = {}
-        for vocabulary in sparql_analyzer.get_patterns(property_list):
+        for vocabulary in sparql_analyzer.get_vocabularies():
             vocab_count[vocabulary] = 0
 
         results['vocabularies'] = str(vocab_count)
