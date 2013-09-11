@@ -102,14 +102,32 @@
     
     <!-- end of adapta extension section -->
     
+    <!-- statistics section -->
+    
+    <py:for each="clazz, entities in c.extra_metadata['classes'].items()">
+    <void:classPartition>
+        <void:class>${clazz}</void:class>
+        <void:entities>${entities}</void:entities>
+    </void:classPartition>
+    </py:for>
+    
+    <py:for each="property, triples in c.extra_metadata['properties'].items()">
+    <void:propertyPartition>
+        <void:property>${property}</void:property>
+        <void:triples>${triples}</void:triples>
+    </void:propertyPartition>
+    </py:for>    
+    
+    <!-- end of statistics section -->
+    
     <!-- extra information section -->
     <py:for each="extra_dict in c.pkg_dict.get('extras', None)">
-        <dcterms:relation>
-          <rdf:Description>
-            <rdfs:label>${extra_dict.get('key','')}</rdfs:label>
-            <rdf:value>${extra_dict.get('value','')}</rdf:value>
-          </rdf:Description>
-        </dcterms:relation>
+    <dcterms:relation>
+      <rdf:Description>
+        <rdfs:label>${extra_dict.get('key','')}</rdfs:label>
+        <rdf:value>${extra_dict.get('value','')}</rdf:value>
+      </rdf:Description>
+    </dcterms:relation>
     </py:for>
     <!-- end of extra information section -->
     
