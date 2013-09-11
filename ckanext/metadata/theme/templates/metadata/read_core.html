@@ -33,7 +33,7 @@
         <tr py:for='i, (key, value) in enumerate(c.extra_metadata.items())'
           rel="dc:relation" resource="_:extra${i}">
           <td class="dataset-label" property="rdfs:label">${key}</td>
-          <td class="dataset-details" property="rdf:value">${value}</td>
+          <td class="dataset-details" property="rdf:value">${str(value)}</td>
         </tr>
       </tbody>
     </table>
