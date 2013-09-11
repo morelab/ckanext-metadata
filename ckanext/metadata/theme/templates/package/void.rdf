@@ -29,13 +29,6 @@
       </rdf:Description>
     </dcterms:creator>
     
-    <!-- <dcterms:publisher  py:if="c.pkg_dict.get('author', None)">
-      <rdf:Description>
-        <foaf:name>${ c.pkg_dict['author'] }</foaf:name>
-        <foaf:mbox  py:if="c.pkg_dict.get('maintainer_email', None)" rdf:resource="mailto:${c.pkg_dict['author_email']}"/>
-      </rdf:Description>
-    </dcterms:publisher> -->
-    
     <!-- <dcterms:date rdf:datatype="&xsd;dateTime">2009-09-30T11:01:59Z</dcterms:date> -->
     <!-- <dcterms:created rdf:datatype="&xsd;dateTime">2009-09-30T11:01:59Z</dcterms:created> -->
     <!-- <dcterms:issued rdf:datatype="&xsd;dateTime">2009-09-30T11:01:59Z</dcterms:issued> -->
@@ -70,10 +63,7 @@
             </py:if>
         </py:for>
     </py:if>
-    
-    <!-- <void:dataDump rdf:resource="http://data.nytimes.com/people.rdf" /> -->
-    <!-- <void:dataDump rdf:resource="http://data.nytimes.com/organizations.rdf" /> -->
-    
+        
     <!-- end of acess metadata section -->
     
     <!-- structural metadata section -->
