@@ -83,8 +83,8 @@
     
     <void:triples py:if="c.extra_metadata.get('triples', None)">${c.extra_metadata.get('triples')}</void:triples>
     <void:entities py:if="c.extra_metadata.get('entities', None)">${c.extra_metadata.get('entities')}</void:entities>
-    <void:classes py:if="c.extra_metadata.get('classes', None)">${c.extra_metadata.get('classes')}</void:classes>
-    <void:properties py:if="c.extra_metadata.get('properties', None)">${c.extra_metadata.get('properties')}</void:properties>
+    <void:classes py:if="c.extra_metadata.get('classes', None)">${len(eval(c.extra_metadata.get('classes')))}</void:classes>
+    <void:properties py:if="c.extra_metadata.get('properties', None)">${len(eval(c.extra_metadata.get('properties')))}</void:properties>
     <void:distinctSubjects py:if="c.extra_metadata.get('subjects', None)">${c.extra_metadata.get('subjects')}</void:distinctSubjects>
     <void:distinctObjects py:if="c.extra_metadata.get('objects', None)">${c.extra_metadata.get('objects')}</void:distinctObjects>
     <!-- end of structural metadata section -->
