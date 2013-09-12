@@ -10,7 +10,7 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
   xmlns:wv="http://vocab.org/waiver/terms/norms"
   xmlns:sd="http://www.w3.org/ns/sparql-service-description#"
-  xmlns:adapta="http://www.morelab.deusto.es/ontologies/adapta-metadata#"
+  xmlns:adapta="http://www.morelab.deusto.es/ontologies/adapta#"
 >
 
 <void:Dataset rdf:about="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}">
