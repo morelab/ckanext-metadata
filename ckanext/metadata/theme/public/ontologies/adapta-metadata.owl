@@ -132,6 +132,22 @@
         <rdfs:comment>Quality of the data source</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#has_certificate">
+        <rdfs:comment>URL which refers to the vocabulary</rdfs:comment>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#asProvider">
+        <rdfs:comment>Number of references to other known datasets as data provider</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#asConsumer">
+        <rdfs:comment>Number of references to other known datasets where data is consumed from</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
         
     <!-- End of provenance section -->
     
