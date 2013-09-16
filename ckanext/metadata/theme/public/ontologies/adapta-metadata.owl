@@ -60,7 +60,7 @@
         <rdfs:comment>Represents a vocabulary and its related information</rdfs:comment>
     </owl:Class>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#quality">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#reference">
         <rdfs:comment>URL which refers to the vocabulary</rdfs:comment>
         <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;anyURI"/>
