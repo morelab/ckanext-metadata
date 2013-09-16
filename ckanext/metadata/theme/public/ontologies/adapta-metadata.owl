@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
-
-
 <!DOCTYPE rdf:RDF [
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
@@ -16,6 +14,8 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
     <owl:Ontology rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata"/>   
+
+    <!-- Data source properties -->
 
     <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#accesible">
         <rdfs:comment>If the dataset is currently accesible</rdfs:comment>
@@ -46,5 +46,51 @@
         <rdfs:comment>The number of total instances of the described dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#ld-stars">
+        <rdfs:comment>Number of stars according to http://www.w3.org/DesignIssues/LinkedData.html</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+    <!-- End of data source properties -->
+    
+    <!-- Vocabulary properties -->
+    
+    <owl:Class rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary">
+        <rdfs:comment>Represents a vocabulary and its related information</rdfs:comment>
+    </owl:Class>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#quality">
+        <rdfs:comment>URL which refers to the vocabulary</rdfs:comment>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#quality">
+        <rdfs:comment>The quality of the vocabulary</rdfs:comment>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#valid_syntax">
+        <rdfs:comment>Vocabulary syntax is correct</rdfs:comment>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#usage">
+        <rdfs:comment>Number of other known datasets using this vocabulary</rdfs:comment>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#integration">
+        <rdfs:comment>Number of other known datasets which could integrate through this vocabulary</rdfs:comment>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+
+    <!-- End of vocabulary properties -->
+    
 </rdf:RDF>
 
