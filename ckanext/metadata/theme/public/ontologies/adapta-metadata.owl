@@ -151,5 +151,25 @@
         
     <!-- End of provenance section -->
     
+    <!-- Reputation section -->
+    
+    <owl:Class rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#AssessmentAgent">
+        <rdfs:comment>Represents an agent which computes assessment indicators for the dataset</rdfs:comment>
+    </owl:Class>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#sourceReliability">
+        <rdfs:comment>The reliability of the source which generated the data as calculated by some agent</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#AssessmentAgent"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#userVotes">
+        <rdfs:comment>The reliability of the source which generated the data as calculated by some agent using user votes</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#AssessmentAgent"/>
+    </owl:DatatypeProperty>
+    
+    <!-- End of reputation section -->
+    
 </rdf:RDF>
 
