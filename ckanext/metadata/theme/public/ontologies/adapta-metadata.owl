@@ -47,7 +47,7 @@
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#ld-stars">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#linkedDataStars">
         <rdfs:comment>Number of stars according to http://www.w3.org/DesignIssues/LinkedData.html</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
@@ -72,7 +72,7 @@
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#valid_syntax">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#validSntax">
         <rdfs:comment>Vocabulary syntax is correct</rdfs:comment>
         <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
@@ -94,22 +94,22 @@
     
     <!-- Data section -->
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#data-syntax">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#validDataSyntax">
         <rdfs:comment>Dataset syntax is correct</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#access-numbers">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#accessCount">
         <rdfs:comment>Number of access to the dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#broken-links">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#brokenLinks">
         <rdfs:comment>Number of broken links the dataset contains</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#integrity-errors">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#integrityErrors">
         <rdfs:comment>Number of integrity errors dataset contains</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
@@ -118,7 +118,7 @@
     
     <!-- Provenance section -->
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#has_provenance">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#hasProvenance">
         <rdfs:comment>Dataset contains provenance info described using an standard vocabulary</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
@@ -128,23 +128,23 @@
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#source_quality">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#sourceQuality">
         <rdfs:comment>Quality of the data source</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#has_certificate">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#hasCertificate">
         <rdfs:comment>URL which refers to the vocabulary</rdfs:comment>
         <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;anyURI"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#asProvider">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#relationsAsProvider">
         <rdfs:comment>Number of references to other known datasets as data provider</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#asConsumer">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#relationsAsConsumer">
         <rdfs:comment>Number of references to other known datasets where data is consumed from</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
