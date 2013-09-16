@@ -92,5 +92,29 @@
 
     <!-- End of vocabulary properties -->
     
+    <!-- Data section -->
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#data-syntax">
+        <rdfs:comment>Dataset syntax is correct</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#access-numbers">
+        <rdfs:comment>Number of access to the dataset</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#broken-links">
+        <rdfs:comment>Number of broken links the dataset contains</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#integrity-errors">
+        <rdfs:comment>Number of integrity errors dataset contains</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+    <!-- End of data section -->
+    
 </rdf:RDF>
 
