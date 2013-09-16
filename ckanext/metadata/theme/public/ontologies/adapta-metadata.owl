@@ -116,5 +116,24 @@
     
     <!-- End of data section -->
     
+    <!-- Provenance section -->
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#has_provenance">
+        <rdfs:comment>Dataset contains provenance info described using an standard vocabulary</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#distance">
+        <rdfs:comment>Distance to dataset original source</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#source_quality">
+        <rdfs:comment>Quality of the data source</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+    </owl:DatatypeProperty>
+        
+    <!-- End of provenance section -->
+    
 </rdf:RDF>
 
