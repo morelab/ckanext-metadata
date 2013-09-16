@@ -7,47 +7,47 @@
 ]>
 
 
-<rdf:RDF xmlns="www.morelab.deusto.es/ontologies/adapta-metadata#"
-     xml:base="www.morelab.deusto.es/ontologies/adapta-metadata"
+<rdf:RDF xmlns="www.morelab.deusto.es/ontologies/adapta#"
+     xml:base="www.morelab.deusto.es/ontologies/adapta"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <owl:Ontology rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata"/>   
+    <owl:Ontology rdf:about="www.morelab.deusto.es/ontologies/adapta"/>   
 
     <!-- Data source properties -->
 
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#accesible">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#accesible">
         <rdfs:comment>If the dataset is currently accesible</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
 
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#ingoing">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#ingoing">
         <rdfs:comment>The number of ingoing links of the described dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#outgoing">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#outgoing">
         <rdfs:comment>The number of outgoing links of the described dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#inner">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#inner">
         <rdfs:comment>The number of inner links of the described dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#links">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#links">
         <rdfs:comment>The number of total links of the described dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#instances">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#instances">
         <rdfs:comment>The number of total instances of the described dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#linkedDataStars">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#linkedDataStars">
         <rdfs:comment>Number of stars according to http://www.w3.org/DesignIssues/LinkedData.html</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
@@ -56,37 +56,37 @@
     
     <!-- Vocabulary properties -->
     
-    <owl:Class rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary">
+    <owl:Class rdf:about="www.morelab.deusto.es/ontologies/adapta#Vocabulary">
         <rdfs:comment>Represents a vocabulary and its related information</rdfs:comment>
     </owl:Class>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#reference">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#reference">
         <rdfs:comment>URL which refers to the vocabulary</rdfs:comment>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;anyURI"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#quality">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#quality">
         <rdfs:comment>The quality of the vocabulary</rdfs:comment>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#validSntax">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#validSntax">
         <rdfs:comment>Vocabulary syntax is correct</rdfs:comment>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#usage">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#usage">
         <rdfs:comment>Number of other known datasets using this vocabulary</rdfs:comment>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#integration">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#integration">
         <rdfs:comment>Number of other known datasets which could integrate through this vocabulary</rdfs:comment>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
 
@@ -94,22 +94,22 @@
     
     <!-- Data section -->
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#validDataSyntax">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#validDataSyntax">
         <rdfs:comment>Dataset syntax is correct</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#accessCount">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#accessCount">
         <rdfs:comment>Number of access to the dataset</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#brokenLinks">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#brokenLinks">
         <rdfs:comment>Number of broken links the dataset contains</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#integrityErrors">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#integrityErrors">
         <rdfs:comment>Number of integrity errors dataset contains</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
@@ -118,33 +118,33 @@
     
     <!-- Provenance section -->
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#hasProvenance">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#hasProvenance">
         <rdfs:comment>Dataset contains provenance info described using an standard vocabulary</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;boolean"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#distance">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#distance">
         <rdfs:comment>Distance to dataset original source</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#sourceQuality">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#sourceQuality">
         <rdfs:comment>Quality of the data source</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#hasCertificate">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#hasCertificate">
         <rdfs:comment>URL which refers to the vocabulary</rdfs:comment>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#Vocabulary"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#Vocabulary"/>
         <rdfs:range rdf:resource="&xsd;anyURI"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#relationsAsProvider">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#relationsAsProvider">
         <rdfs:comment>Number of references to other known datasets as data provider</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#relationsAsConsumer">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#relationsAsConsumer">
         <rdfs:comment>Number of references to other known datasets where data is consumed from</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
     </owl:DatatypeProperty>
@@ -153,20 +153,20 @@
     
     <!-- Reputation section -->
     
-    <owl:Class rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#AssessmentAgent">
+    <owl:Class rdf:about="www.morelab.deusto.es/ontologies/adapta#AssessmentAgent">
         <rdfs:comment>Represents an agent which computes assessment indicators for the dataset</rdfs:comment>
     </owl:Class>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#sourceReliability">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#sourceReliability">
         <rdfs:comment>The reliability of the source which generated the data as calculated by some agent</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#AssessmentAgent"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#AssessmentAgent"/>
     </owl:DatatypeProperty>
     
-    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta-metadata#userVotes">
+    <owl:DatatypeProperty rdf:about="www.morelab.deusto.es/ontologies/adapta#userVotes">
         <rdfs:comment>The reliability of the source which generated the data as calculated by some agent using user votes</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;integer"/>
-        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta-metadata#AssessmentAgent"/>
+        <rdfs:domain rdf:resource="www.morelab.deusto.es/ontologies/adapta#AssessmentAgent"/>
     </owl:DatatypeProperty>
     
     <!-- End of reputation section -->
