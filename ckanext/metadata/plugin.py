@@ -41,7 +41,7 @@ class MetadataExtension(SingletonPlugin):
                     '''<li class>
                         <a class href="/dataset/metadata/%s">
                             <img src="/icons/rdf_flyer.24" height="16px" width="16px" alt="None" class="inline-icon ">
-                            Extra
+                             Metadata
                         </a>
                     </li>''' % routes.get('id')
                     
