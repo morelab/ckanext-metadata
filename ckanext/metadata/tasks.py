@@ -169,7 +169,7 @@ def analyze_metadata(url):
         password = DB_URL[DB_URL.rfind(':') + 1:DB_URL.rfind('@')]
         host = DB_URL[DB_URL.rfind('@') + 1:DB_URL.rfind('/')]
         
-        sparql_analyzer = SPARQLAnalyzer(url, 'rdfstore', 'user=%s password=%s host=%s dbname=%s' % (user, password, host, db_name), store='PostgreSQL', proxy=None, subprocess=False)
+        sparql_analyzer = SPARQLAnalyzer(url)
         sparql_analyzer.open()
 
         sparql_analyzer.load_graph()
@@ -178,16 +178,16 @@ def analyze_metadata(url):
 
         results['classes'] = str(sparql_analyzer.get_all_classes_instances())
         results['properties'] = str(sparql_analyzer.get_all_predicate_triples())
-        results['subjects'] = len(sparql_analyzer.get_subjects())
-        results['objects'] = len(sparql_analyzer.get_objects())
-        results['instances'] = len(sparql_analyzer.get_all_links())
-        results['entities'] = len(sparql_analyzer.get_entities())
-
-        results['triples'] = len(sparql_analyzer.get_triples())
-        results['all_links'] = len(sparql_analyzer.get_all_links())
-        results['ingoing_links'] = len(sparql_analyzer.get_ingoing_links())
-        results['outgoing_links'] = len(sparql_analyzer.get_outgoing_links())
-        results['inner_links'] = len(sparql_analyzer.get_inner_links())
+        results['subjects'] = sparql_analyzer.get_subjects_count()
+        results['objects'] = sparql_analyzer.get_objects_count()
+        results['instances'] = sparql_analyzer.get_all_links_count()
+        results['entities'] = sparql_analyzer.get_entities_count()
+        results['triples'] = sparql_analyzer.get_triples_count()
+        
+        results['all_links'] = sparql_analyzer.get_all_links_count()
+        results['ingoing_links'] = sparql_analyzer.get_ingoing_links_count()
+        results['outgoing_links'] = sparql_analyzer.get_outgoing_links_count()
+        results['inner_links'] = sparql_analyzer.get_inner_links_count()
 
         vocab_count = {}
         for vocabulary in sparql_analyzer.get_vocabularies():
@@ -201,6 +201,8 @@ def analyze_metadata(url):
 
     print 'SPARQL endpoint analyzed'
 
+
+    print results
     return results
 
 def obtain_metadata(package_info):
