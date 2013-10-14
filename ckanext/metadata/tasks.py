@@ -200,9 +200,7 @@ def analyze_metadata(url):
         results['accesible'] = str(False)
 
     print 'SPARQL endpoint analyzed'
-
-
-    print results
+    
     return results
 
 def obtain_metadata(package_info):

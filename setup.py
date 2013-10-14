@@ -23,7 +23,6 @@ setup(
         'celery',
         'requests',
         'swanalyzer',
-	'rdflib-postgresql'
     ],
     dependency_links=[
         'https://github.com/memaldi/SWAnalyzer/tarball/master#egg=swanalyzer',
