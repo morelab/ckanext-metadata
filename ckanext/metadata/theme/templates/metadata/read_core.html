@@ -29,10 +29,10 @@
           <th scope="col">Value</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody py:if="len(c.extra_metadata) > 0">
         <tr rel="dc:relation">
-          <td class="dataset-label" property="rdfs:label">VoID description</td>
-          <td class="dataset-details" property="rdf:value"><a href="/dataset/metadata/${c.id}/void.rdf">void.rdf</a></td>
+                <td class="dataset-label" property="rdfs:label">VoID description</td>
+                <td class="dataset-details" property="rdf:value"><a href="/dataset/metadata/${c.id}/void.rdf">void.rdf</a></td>
         </tr>
         <tr py:for='i, (key, value) in enumerate(c.extra_metadata.items())'
           rel="dc:relation" resource="_:extra${i}">
