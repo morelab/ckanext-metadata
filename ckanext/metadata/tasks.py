@@ -6,6 +6,8 @@ from logging import getLogger
 from celery.schedules import crontab
 from celery.task import periodic_task
 
+from celery.signals import beat_init
+
 import time
 import json
 import urlparse
@@ -331,7 +333,8 @@ def get_status_show():
         print 'ckan failed to get status information, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
         
-def clear_broken_status_tasks():
+@beat_init.connect 
+def clear_broken_status_tasks(sender=None, conf=None, **kwargs):
     print 'Clearing broken status tasks'
 
     tasks_status = get_tasks_status()
@@ -344,30 +347,21 @@ def clear_broken_status_tasks():
 
 @periodic_task(run_every=periodicity)
 def launch_metadata_calculation():  
-    try:
-        status_info = get_status_show()
-        ckan_running = True
-    except Exception:
-        ckan_running = False
-        
-    if ckan_running:  
-        clear_broken_status_tasks()
-          
-        print 'Launching metadata periodic task'
+                
+    print 'Launching metadata periodic task'
 
-        package_list = get_package_list()
-        for package_name in package_list:
-            package_info = get_package_info(package_name)
+    package_list = get_package_list()
+    for package_name in package_list:
+        package_info = get_package_info(package_name)
 
-            task_status = get_task_status(package_info['id'])
-            if len(task_status) == 0:
-                task_status_value = None
-            else:
-                task_status_value = get_task_status_value(eval(task_status['value']))
+        task_status = get_task_status(package_info['id'])
+        if len(task_status) == 0:
+            task_status_value = None
+        else:
+            task_status_value = get_task_status_value(eval(task_status['value']))
 
-            if task_status_value is None or task_status_value not in ('launched'):
-                obtain_metadata(package_info)
-            else:
-                print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
-    else:
-        print 'CKAN server not running'
+        if task_status_value is None or task_status_value not in ('launched'):
+            obtain_metadata(package_info)
+        else:
+            print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
+
