@@ -251,7 +251,7 @@ def analyze_metadata(url):
     return results
 
 def obtain_metadata(package_info):
-    print 'Updating metadata for package %s' % package_info['id']
+    print 'Updating metadata for package %s' % package_info['name']
 
     sparql_endpoints = []
     for resource in package_info['resources']:
@@ -275,7 +275,7 @@ def obtain_metadata(package_info):
 
         updatePackageProperties(package_info['id'], metadata)
 
-        print 'Metadata task finished for package %s' % package_info['id']
+        print 'Metadata task finished for package %s' % package_info['name']
 
         update_vocab_count()
 
@@ -363,5 +363,5 @@ def launch_metadata_calculation():
         if task_status_value is None or task_status_value not in ('launched'):
             obtain_metadata(package_info)
         else:
-            print 'Ignoring package %s because it was in status %s' % (package_info['id'], task_status_value)
+            print 'Ignoring package %s because it was in status %s' % (package_info['name'], task_status_value)
 
