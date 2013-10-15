@@ -176,25 +176,70 @@ def analyze_metadata(url):
 
         results['accesible'] = str(True)
 
-        results['classes'] = str(sparql_analyzer.get_all_classes_instances())
-        results['properties'] = str(sparql_analyzer.get_all_predicate_triples())
-        results['subjects'] = sparql_analyzer.get_subjects_count()
-        results['objects'] = sparql_analyzer.get_objects_count()
-        results['instances'] = sparql_analyzer.get_all_links_count()
-        results['entities'] = sparql_analyzer.get_entities_count()
-        results['triples'] = sparql_analyzer.get_triples_count()
+        try:
+            results['classes'] = str(sparql_analyzer.get_all_classes_instances())
+        except:
+            pass
+
+        try:
+            results['properties'] = str(sparql_analyzer.get_all_predicate_triples())
+        except:
+            pass
+
+        try:
+            results['subjects'] = sparql_analyzer.get_subjects_count()
+        except:
+            pass
+
+        try:
+            results['objects'] = sparql_analyzer.get_objects_count()
+        except:
+            pass
+
+        try:
+            results['instances'] = sparql_analyzer.get_all_links_count()
+        except:
+            pass
+
+        try:
+            results['entities'] = sparql_analyzer.get_entities_count()
+        except:
+            pass
+
+        try:
+            results['triples'] = sparql_analyzer.get_triples_count()
+        except:
+            pass
+
+        try:
+            results['all_links'] = sparql_analyzer.get_all_links_count()
+        except:
+            pass
+
+        try:    
+            results['ingoing_links'] = sparql_analyzer.get_ingoing_links_count()
+        except:
+            pass
+
+        try:
+            results['outgoing_links'] = sparql_analyzer.get_outgoing_links_count()
+        except:
+            pass
+
+        try:
+            results['inner_links'] = sparql_analyzer.get_inner_links_count()
+        except:
+            pass
+
+        try:
+            vocab_count = {}
+            for vocabulary in sparql_analyzer.get_vocabularies():
+                vocab_count[vocabulary] = 0
+
+            results['vocabularies'] = str(vocab_count)
+        except:
+            pass
         
-        results['all_links'] = sparql_analyzer.get_all_links_count()
-        results['ingoing_links'] = sparql_analyzer.get_ingoing_links_count()
-        results['outgoing_links'] = sparql_analyzer.get_outgoing_links_count()
-        results['inner_links'] = sparql_analyzer.get_inner_links_count()
-
-        vocab_count = {}
-        for vocabulary in sparql_analyzer.get_vocabularies():
-            vocab_count[vocabulary] = 0
-
-        results['vocabularies'] = str(vocab_count)
-
         sparql_analyzer.close()
     else:
         results['accesible'] = str(False)
