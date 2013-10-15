@@ -163,90 +163,101 @@ def analyze_metadata(url):
     results = {}
 
     print 'Analyzing SPARQL endpoint on URL %s' % url
+    
+    try:
+        if check_sparql_endpoint(url):
+            
+            sparql_analyzer = SPARQLAnalyzer(url)
+            sparql_analyzer.open()
 
-    if check_sparql_endpoint(url):
-        
-        db_name = DB_URL[DB_URL.rfind('/') + 1:]
-        user = DB_URL[DB_URL.rfind('//') + 2:DB_URL.rfind(':')]
-        password = DB_URL[DB_URL.rfind(':') + 1:DB_URL.rfind('@')]
-        host = DB_URL[DB_URL.rfind('@') + 1:DB_URL.rfind('/')]
-        
-        sparql_analyzer = SPARQLAnalyzer(url)
-        sparql_analyzer.open()
+            sparql_analyzer.load_graph()
 
-        sparql_analyzer.load_graph()
+            results['accesible'] = str(True)
 
-        results['accesible'] = str(True)
+            try:
+                results['subjects'] = sparql_analyzer.get_subjects_count()
+            except:
+                print 'Problem getting subjects of %s' %url
+                pass
 
-        try:
-            results['classes'] = str(sparql_analyzer.get_all_classes_instances())
-        except:
-            pass
+            try:
+                results['objects'] = sparql_analyzer.get_objects_count()
+            except:
+                print 'Problem getting objects of %s' %url
+                pass
 
-        try:
-            results['properties'] = str(sparql_analyzer.get_all_predicate_triples())
-        except:
-            pass
+            try:
+                results['instances'] = sparql_analyzer.get_all_links_count()
+            except:
+                print 'Problem getting instances of %s' %url
+                pass
 
-        try:
-            results['subjects'] = sparql_analyzer.get_subjects_count()
-        except:
-            pass
+            try:
+                results['entities'] = sparql_analyzer.get_entities_count()
+            except:
+                print 'Problem getting entities of %s' %url
+                pass
 
-        try:
-            results['objects'] = sparql_analyzer.get_objects_count()
-        except:
-            pass
+            try:
+                results['triples'] = sparql_analyzer.get_triples_count()
+            except:
+                print 'Problem getting triples of %s' %url
+                pass
+                
+            try:
+                results['classes'] = str(sparql_analyzer.get_all_classes_instances())
+            except:
+                print 'Problem getting classes of %s' %url
+                pass
 
-        try:
-            results['instances'] = sparql_analyzer.get_all_links_count()
-        except:
-            pass
+            try:
+                results['properties'] = str(sparql_analyzer.get_all_predicate_triples())
+            except:
+                print 'Problem getting properties of %s' %url
+                pass
 
-        try:
-            results['entities'] = sparql_analyzer.get_entities_count()
-        except:
-            pass
+            try:
+                results['all_links'] = sparql_analyzer.get_all_links_count()
+            except:
+                print 'Problem getting all links of %s' %url
+                pass
 
-        try:
-            results['triples'] = sparql_analyzer.get_triples_count()
-        except:
-            pass
+            try:    
+                results['ingoing_links'] = sparql_analyzer.get_ingoing_links_count()
+            except:
+                print 'Problem getting ingoing links of %s' %url
+                pass
 
-        try:
-            results['all_links'] = sparql_analyzer.get_all_links_count()
-        except:
-            pass
+            try:
+                results['outgoing_links'] = sparql_analyzer.get_outgoing_links_count()
+            except:
+                print 'Problem getting outgoing links of %s' %url
+                pass
 
-        try:    
-            results['ingoing_links'] = sparql_analyzer.get_ingoing_links_count()
-        except:
-            pass
+            try:
+                results['inner_links'] = sparql_analyzer.get_inner_links_count()
+            except:
+                print 'Problem getting inner links of %s' %url
+                pass
 
-        try:
-            results['outgoing_links'] = sparql_analyzer.get_outgoing_links_count()
-        except:
-            pass
+            try:
+                vocab_count = {}
+                for vocabulary in sparql_analyzer.get_vocabularies():
+                    vocab_count[vocabulary] = 0
 
-        try:
-            results['inner_links'] = sparql_analyzer.get_inner_links_count()
-        except:
-            pass
+                results['vocabularies'] = str(vocab_count)
+            except:
+                print 'Problem getting vocabularies of %s' %url
+                pass
+            
+            sparql_analyzer.close()
+        else:
+            results['accesible'] = str(False)
 
-        try:
-            vocab_count = {}
-            for vocabulary in sparql_analyzer.get_vocabularies():
-                vocab_count[vocabulary] = 0
-
-            results['vocabularies'] = str(vocab_count)
-        except:
-            pass
-        
-        sparql_analyzer.close()
-    else:
-        results['accesible'] = str(False)
-
-    print 'SPARQL endpoint analyzed'
+        print 'SPARQL endpoint analyzed'
+    except:
+        print 'Problem with SPARQL endpoint analysis detected'
+        pass
     
     return results
 
