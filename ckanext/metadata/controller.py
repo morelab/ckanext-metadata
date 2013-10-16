@@ -35,7 +35,9 @@ class MetadataController(PackageController):
             extra_metadata[property.key] = eval(property.value)
             
         timestamp = model.Session.query(Timestamp).filter_by(package_id=id).first()
-        extra_metadata['metadata-updated'] = timestamp.updated.isoformat()
+        
+        if len(extra_metadata) > 0:
+            extra_metadata['metadata-updated'] = timestamp.updated
                     
         return extra_metadata
         

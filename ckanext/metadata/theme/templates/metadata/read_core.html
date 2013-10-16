@@ -6,7 +6,14 @@
   <xi:include href="../_util.html" />
 
   <div id="dataset" class="dataset">
-    <h3>Metadata Task Status: <b>${c.metadata_task_status}</b></h3>
+    <py:choose>
+        <py:when test="'metadata-updated' in c.extra_metadata">
+            <h3>Last updated: <b>${c.extra_metadata['metadata-updated'].strftime('%Y-%m-%d %H:%M:%S')}</b></h3>
+        </py:when>
+        <py:otherwise>
+            <h3>Last updated: <b>Not available</b></h3>
+        </py:otherwise>
+    </py:choose>
     
     <form 
       id="clear-data" 
