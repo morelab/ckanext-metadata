@@ -13,7 +13,7 @@ from ckan.model.types import make_uuid
 
 from datetime import datetime
 
-from model.property_model import Property
+from model.property_model import Property, Timestamp
 
 log = getLogger(__name__)
 
@@ -28,11 +28,14 @@ def get_task_status(context, id):
 class MetadataController(PackageController):
     
     def get_extra_metadata(self, id):
-        properties = model.Session.query(Property).filter_by(package_id=id)
+        properties = model.Session.query(Property).filter_by(package_id=id).all()
 
         extra_metadata = {}
         for property in properties:
             extra_metadata[property.key] = eval(property.value)
+            
+        timestamp = model.Session.query(Timestamp).filter_by(package_id=id).first()
+        extra_metadata['metadata-updated'] = timestamp.updated.isoformat()
                     
         return extra_metadata
         
@@ -134,6 +137,9 @@ class ApiController(BaseApiController):
                 property = Property(request['package_id'], key, value)
                 model.Session.merge(property)
 
+        timestamp = Timestamp(request['package_id'])
+        model.Session.merge(timestamp)
+        
         model.Session.commit()
 
         return self._finish_ok({})
