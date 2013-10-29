@@ -387,7 +387,6 @@ def clear_broken_status_tasks(sender=None, conf=None, **kwargs):
 
 @periodic_task(run_every=periodicity)
 def launch_metadata_calculation():  
-                
     print 'Launching metadata periodic task'
 
     package_list = get_package_list()
