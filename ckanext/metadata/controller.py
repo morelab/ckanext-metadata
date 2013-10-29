@@ -55,7 +55,8 @@ class MetadataController(PackageController):
 
         if 'clear' in request.params and c.user is not '':
             print 'Clearing metadata for package %s' % c.pkg.id
-            properties = model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
+            model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
+            model.Session.query(Timestamp).filter_by(package_id=c.pkg.id).delete()
             model.Session.commit()
 
         c.extra_metadata = self.get_extra_metadata(c.pkg.id)
