@@ -278,8 +278,9 @@ def obtain_metadata(package_info):
             break
 
     if metadata_timestamp is not None and sparql_endpoint[0] is not None and \
-        sparql_endpoint[1] is not None and metadata_timestamp - sparql_endpoint[1] > 0:
-        print 'Metadata was already calculated'
+        sparql_endpoint[1] is not None and \
+        metadata_timestamp - sparql_endpoint[1] > timedelta(0):
+        print 'Metadata was already calculated. No updates found'
         return
 
     if sparql_endpoint[0] is not None:
