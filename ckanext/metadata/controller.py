@@ -52,8 +52,8 @@ class MetadataController(PackageController):
         package_info = get_action('package_show')(context, {'id': c.pkg.id})
 
         c.metadata_task_status = get_task_status_value(package_info['id'])
-        
-        if 'clear' in request.params:
+
+        if 'clear' in request.params and c.user is not '':
             print 'Clearing metadata for package %s' % c.pkg.id
             properties = model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
             model.Session.commit()
