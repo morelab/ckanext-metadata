@@ -82,5 +82,9 @@ class MetadataExtension(SingletonPlugin):
             controller='ckanext.metadata.controller:ApiController',
             action='update_vocabulary_count')
 
+        map.connect('api_get_metadata_timestamp', '/api/2/get/get_metadata_timestamp',
+            controller='ckanext.metadata.controller:ApiController',
+            action='get_metadata_timestamp')
+
         return map
         

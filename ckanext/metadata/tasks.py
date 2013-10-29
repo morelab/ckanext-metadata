@@ -12,6 +12,7 @@ import time
 import json
 import urlparse
 import requests
+import dateutil.parser
 
 from datetime import timedelta, datetime
 from celery.signals import beat_init
@@ -264,12 +265,24 @@ def analyze_metadata(url):
 def obtain_metadata(package_info):
     print 'Updating metadata for package %s' % package_info['name']
 
-    sparql_endpoints = []
+    metadata_timestamp = get_metadata_timestamp(package_info['id'])
+
+    sparql_endpoint = (None, None)
     for resource in package_info['resources']:
         if resource['resource_type'] == 'api' and resource['format'].lower() == 'api/sparql':
-            sparql_endpoints.append(resource['url'])
+            if resource['last_modified'] is None:
+                last_modified = None
+            else:
+                last_modified = dateutil.parser.parse(resource['last_modified'])
+            sparql_endpoint = (resource['url'], last_modified)
+            break
 
-    if len(sparql_endpoints) > 0:
+    if metadata_timestamp is not None and sparql_endpoint[0] is not None and \
+        sparql_endpoint[1] is not None and metadata_timestamp - sparql_endpoint[1] > 0:
+        print 'Metadata was already calculated'
+        return
+
+    if sparql_endpoint[0] is not None:
         task_info = {
             'entity_id': package_info['id'],
             'entity_type': u'package',
@@ -282,7 +295,7 @@ def obtain_metadata(package_info):
 
         task_status = update_task_status(task_info)
 
-        metadata = analyze_metadata(sparql_endpoints[0])
+        metadata = analyze_metadata(sparql_endpoint[0])
 
         updatePackageProperties(package_info['id'], metadata)
 
@@ -302,8 +315,6 @@ def obtain_metadata(package_info):
         }
 
         update_task_status(task_info)
-
-        metadata['sparql_endpoints'] = len(sparql_endpoints)
 
 def get_package_list():
     res = requests.post(
@@ -330,6 +341,23 @@ def get_package_info(package_name):
     else:
         print 'ckan failed to show package information, status_code (%s), error %s' % (res.status_code, res.content)
         return {}
+
+def get_metadata_timestamp(package_id):
+    res = requests.post(
+        API_URL + '2/get/get_metadata_timestamp', json.dumps({'package_id': package_id}),
+        headers = {'Authorization': API_KEY,
+                   'Content-Type': 'application/json'}
+    )
+
+    if res.status_code == 200:
+        result = json.loads(res.content)
+        if len(result) > 0:
+            return dateutil.parser.parse((result['result']['timestamp']))
+        else:
+            return None
+    else:
+        print 'ckan failed to get metadata timestamp, status_code (%s), error %s' % (res.status_code, res.content)
+        return None
         
 def get_status_show():
     res = requests.post(

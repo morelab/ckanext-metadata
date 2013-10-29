@@ -171,3 +171,23 @@ class ApiController(BaseApiController):
         model.Session.commit()
 
         return self._finish_ok({})
+
+    def get_metadata_timestamp(self):
+        log.info('Getting package information')
+
+        request = self._get_request_data()
+
+        if not 'package_id' in request:
+            abort(400, 'Please provide a suitable package_id parameter')
+
+        log.info('Using package id %s' % request['package_id'])
+
+        timestamp = model.Session.query(Timestamp).filter_by(package_id=request['package_id']).first()
+
+        if timestamp is not None:
+            result = {}
+            result['result'] = {}
+            result['result']['timestamp'] = timestamp.updated.isoformat()
+            return self._finish_ok(response_data=result)        
+        else:
+            return self._finish_ok({})
