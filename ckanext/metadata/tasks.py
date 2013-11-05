@@ -384,23 +384,25 @@ def clear_broken_status_tasks(sender=None, conf=None, **kwargs):
             print 'Deleting task %s with status %s' % (task_id, status)
             delete_task_status(task_id)
 
+@celery.task(name = "metadata.launch")
+def launch(package_name):
+    package_info = get_package_info(package_name)
+    task_status = get_task_status(package_info['id'])
+    if len(task_status) == 0:
+        task_status_value = None
+    else:
+        task_status_value = get_task_status_value(eval(task_status['value']))
+
+    if task_status_value is None or task_status_value not in ('launched'):
+        obtain_metadata(package_info)
+    else:
+        print 'Ignoring package %s because it was in status %s' % (package_name, task_status_value)
+
 
 @periodic_task(run_every=periodicity)
-def launch_metadata_calculation():  
+def periodic_metadata_calculation():  
     print 'Launching metadata periodic task'
 
     package_list = get_package_list()
     for package_name in package_list:
-        package_info = get_package_info(package_name)
-
-        task_status = get_task_status(package_info['id'])
-        if len(task_status) == 0:
-            task_status_value = None
-        else:
-            task_status_value = get_task_status_value(eval(task_status['value']))
-
-        if task_status_value is None or task_status_value not in ('launched'):
-            obtain_metadata(package_info)
-        else:
-            print 'Ignoring package %s because it was in status %s' % (package_info['name'], task_status_value)
-
+        launch(package_name)

@@ -10,10 +10,13 @@ from tasks import get_task_status_value
 from genshi.template import MarkupTemplate
 
 from ckan.model.types import make_uuid
+from ckan.lib.celery_app import celery
 
 from datetime import datetime
 
 from model.property_model import Property, Timestamp
+
+import uuid
 
 log = getLogger(__name__)
 
@@ -53,11 +56,13 @@ class MetadataController(PackageController):
 
         c.metadata_task_status = get_task_status_value(package_info['id'])
 
-        if 'clear' in request.params and c.user is not '':
+        if 'launch' in request.params and c.user is not '':
             print 'Clearing metadata for package %s' % c.pkg.id
             model.Session.query(Property).filter_by(package_id=c.pkg.id).delete()
             model.Session.query(Timestamp).filter_by(package_id=c.pkg.id).delete()
             model.Session.commit()
+            task_id = str(uuid.uuid4())
+            celery.send_task("metadata.launch", args=[package_info['name']], task_id=task_id)
 
         c.extra_metadata = self.get_extra_metadata(c.pkg.id)
 
