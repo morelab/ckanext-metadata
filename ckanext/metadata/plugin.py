@@ -86,5 +86,9 @@ class MetadataExtension(SingletonPlugin):
             controller='ckanext.metadata.controller:ApiController',
             action='get_metadata_timestamp')
 
+        map.connect('api_get_metadata_properties', '/api/2/get/get_metadata_properties',
+            controller='ckanext.metadata.controller:ApiController',
+            action='get_metadata_properties')
+
         return map
         
